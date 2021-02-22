@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Forecast_MVVM</string>
+    <string name="location">Location</string>
+    <string name="updateAt">Updated at</string>
+    <string name="ClearSky">ClearSky</string>
+    <string name="tempTemperature">24°C</string>
+</resources>
