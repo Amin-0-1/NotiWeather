@@ -20,41 +20,14 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding:ActivityMainBinding
     lateinit var navController:NavController
-    lateinit var mainViewModel: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-
         prepareNavigation()
-        prepareLogic()
 
 
-    }
-
-
-
-
-    // viewModel init and observers
-    private fun prepareLogic() {
-        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        observeViewModel(mainViewModel)
-
-        mainViewModel.getWeather() // api call
-    }
-    private fun observeViewModel(viewModel: MainViewModel) {
-        viewModel.getCurrentWeather().observe(this, Observer {
-
-        })
-
-        viewModel.getErrorState().observe(this, Observer {
-
-        })
-
-        viewModel.getLoading().observe(this, Observer {
-
-        })
     }
 
     //Navigation specific
