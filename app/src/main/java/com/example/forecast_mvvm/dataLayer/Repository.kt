@@ -24,11 +24,7 @@ class Repository(val application: Application) {
 
 
         return localDataSource.getWeatherData()
-//         localDataSource.getWeatherData().observeForever {
-//           return withContext(Dispatchers.Main){
-//                return@withContext it
-//            }
-//         }
+
 
     }
 

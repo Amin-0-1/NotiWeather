@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="temp">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">70sp</item>
+        <item name="fontFamily">serif</item>
+    </style>
+</resources>

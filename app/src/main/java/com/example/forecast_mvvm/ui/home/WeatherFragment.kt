@@ -1,24 +1,30 @@
 package com.example.forecast_mvvm.ui.home
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.forecast_mvvm.databinding.WeatherFragmentBinding
 
 class WeatherFragment : Fragment() {
 
     private lateinit var viewModel: WeatherViewModel
+    private lateinit var hourlyAdapter: HourlyAdapter
 
     lateinit var binding: WeatherFragmentBinding
     companion object {
         fun newInstance() = WeatherFragment()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         binding = WeatherFragmentBinding.inflate(layoutInflater)
         return binding.root
@@ -30,6 +36,12 @@ class WeatherFragment : Fragment() {
         // TODO: Use the ViewModel
 
         prepareLogic()
+
+        val linearLayoutManager:LinearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        binding.recycleView.setLayoutManager(linearLayoutManager)
+        hourlyAdapter = HourlyAdapter(mutableListOf())
+        binding.recycleView.setAdapter(hourlyAdapter)
     }
 
 
@@ -40,22 +52,17 @@ class WeatherFragment : Fragment() {
     // viewModel init and observers
     private fun prepareLogic() {
         observeViewModel()
-
-        viewModel.getWeather() // api call
-//        viewModel.getWeather().observe(viewLifecycleOwner, Observer {
-//            binding.txt.text = it.weatherState.temp.toString()
-//        })
+        viewModel.getWeather()
     }
     private fun observeViewModel() {
 
 
         viewModel.getCurrentWeatherLiveData().observe(viewLifecycleOwner, Observer {
-            binding.txt.text = it.weatherState.temp.toString()
+//            binding.textView.text = it.weatherState.temp.toString()
+
+            hourlyAdapter.setAdapterData(it.hourly)
+
         })
-
-
-
-
 
         viewModel.getErrorState().observe(viewLifecycleOwner, Observer {
 

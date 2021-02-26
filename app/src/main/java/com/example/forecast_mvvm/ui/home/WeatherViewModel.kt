@@ -31,11 +31,6 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                     currentWeatherLiveData.postValue(it)
                 }
             }
-
-
-//            withContext(Dispatchers.Main){
-//                currentWeatherLiveData.postValue(deferred.await())
-//            }
         }
     }
 

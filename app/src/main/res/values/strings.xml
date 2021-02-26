@@ -4,4 +4,5 @@
     <string name="updateAt">Updated at</string>
     <string name="ClearSky">ClearSky</string>
     <string name="tempTemperature">24°C</string>
+    <string name="hint_temp">55°</string>
 </resources>
