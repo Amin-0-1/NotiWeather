@@ -6,11 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
-import com.example.forecast_mvvm.MainViewModel
-import com.example.forecast_mvvm.R
-import com.example.forecast_mvvm.databinding.ActivityMainBinding
 import com.example.forecast_mvvm.databinding.WeatherFragmentBinding
 
 class WeatherFragment : Fragment() {
@@ -18,15 +14,11 @@ class WeatherFragment : Fragment() {
     private lateinit var viewModel: WeatherViewModel
 
     lateinit var binding: WeatherFragmentBinding
-
     companion object {
         fun newInstance() = WeatherFragment()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = WeatherFragmentBinding.inflate(layoutInflater)
         return binding.root
@@ -47,14 +39,23 @@ class WeatherFragment : Fragment() {
 
     // viewModel init and observers
     private fun prepareLogic() {
-        observeViewModel(viewModel)
+        observeViewModel()
 
         viewModel.getWeather() // api call
+//        viewModel.getWeather().observe(viewLifecycleOwner, Observer {
+//            binding.txt.text = it.weatherState.temp.toString()
+//        })
     }
-    private fun observeViewModel(viewModel: WeatherViewModel) {
-        viewModel.getCurrentWeather().observe(viewLifecycleOwner, Observer {
-            binding.txt.text = it.currentWeatherEntry.temp.toString()
+    private fun observeViewModel() {
+
+
+        viewModel.getCurrentWeatherLiveData().observe(viewLifecycleOwner, Observer {
+            binding.txt.text = it.weatherState.temp.toString()
         })
+
+
+
+
 
         viewModel.getErrorState().observe(viewLifecycleOwner, Observer {
 

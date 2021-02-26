@@ -1,10 +1,6 @@
 package com.example.forecast_mvvm.dataLayer.remote
 
-import androidx.lifecycle.MutableLiveData
-import com.example.forecast_mvvm.dataLayer.entities.CurrentWeatherEntry
 import com.example.forecast_mvvm.dataLayer.entities.WeatherResponse
-import com.example.forecast_mvvm.ui.home.WeatherViewModel
-import retrofit2.Call
 import retrofit2.Response
 
 class RemoteDataSource() {
