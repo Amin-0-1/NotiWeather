@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class WeatherState(
     val clouds: Int, // exist
 
-    val dt: Int, // current time
+    val dt: Long, // current time
 
     val humidity: Int, // exist
     val pressure: Int, // exist

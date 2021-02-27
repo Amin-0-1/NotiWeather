@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Daily(
     val clouds: Int,
-    val dt: Int,
+    val dt: Long,
 
     val humidity: Int,
 

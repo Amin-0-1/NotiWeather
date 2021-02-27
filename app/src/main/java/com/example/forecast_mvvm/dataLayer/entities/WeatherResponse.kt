@@ -15,6 +15,7 @@ data class WeatherResponse(
     val daily: List<Daily>,
 
 //    @TypeConverters(Converter::class)
+    @SerializedName("hourly")
     val hourly: List<WeatherState>,
 
 //    @TypeConverters(Converter::class)
@@ -23,8 +24,8 @@ data class WeatherResponse(
     val lat: Double,
     val lon: Double,
     val timezone: String,
-//    @SerializedName("timezone_offset")
-//    val timezoneOffset: Int
+    @SerializedName("timezone_offset")
+    val timezoneOffset: Int
 ){
     @PrimaryKey(autoGenerate = false)
     var id :Int = 0

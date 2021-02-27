@@ -4,11 +4,11 @@ buildscript {
     ext.kotlin_version = "1.4.30"
     ext.room_version = '2.2.6'
     ext.navigation_version = '2.3.3'
-    ext.kodein_version = '7.3.0'
     ext.lifecycle_version = '2.3.0'
     ext.retrofit_version = '2.8.1'
     ext.converter_gson_verstion = '2.8.1'
     ext.gson_gson_version = '2.8.6'
+    ext.glide = '4.12.0'
 
     repositories {
         google()

@@ -1,14 +1,16 @@
 package com.example.forecast_mvvm.ui.home
 
+import android.annotation.SuppressLint
 import android.app.Application
-import androidx.annotation.NonNull
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.forecast_mvvm.dataLayer.Repository
 import com.example.forecast_mvvm.dataLayer.entities.WeatherResponse
 import kotlinx.coroutines.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class WeatherViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -42,5 +44,24 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     }
     fun getCurrentWeatherLiveData(): LiveData<WeatherResponse> {
         return currentWeatherLiveData
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun extractTime(dt: Long): String {
+        val transformedDate = SimpleDateFormat("hh a").format(Date(dt * 1000))
+
+        if(transformedDate[0] == '0') {
+            return transformedDate.substring(1)
+        }
+
+        return transformedDate
+    }
+
+    fun exactDay(dt: Long): String {
+        return SimpleDateFormat("EEEE").format(Date(dt * 1000))
+    }
+
+    fun getCurrentDate(dt: Long) :String{
+        return SimpleDateFormat("dd MMM yyyy").format(Date(dt * 1000))
     }
 }

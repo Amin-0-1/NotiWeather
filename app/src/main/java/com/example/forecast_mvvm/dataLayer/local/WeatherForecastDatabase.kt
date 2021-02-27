@@ -7,8 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.forecast_mvvm.dataLayer.entities.Converter
 import com.example.forecast_mvvm.dataLayer.entities.WeatherResponse
-
-@Database(entities = [WeatherResponse::class], version = 2)
+// dt to long
+@Database(entities = [WeatherResponse::class], version = 4)
 @TypeConverters(Converter::class)
 
  abstract class WeatherForecastDatabase:RoomDatabase() {

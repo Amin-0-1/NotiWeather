@@ -4,5 +4,14 @@
     <string name="updateAt">Updated at</string>
     <string name="ClearSky">ClearSky</string>
     <string name="tempTemperature">24°C</string>
-    <string name="hint_temp">55°</string>
+    <string name="hint_temp">--°</string>
+    <string name="loading">Loading</string>
+    <string name="timeHourly">12AM</string>
+    <string name="image_content">img</string>
+    <string name="weather_state">partially Good</string>
+    <string name="weatherStateDesc">Mostly clear currently it is 15° degree in cairo</string>
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+    <string name="clouds">Clouds</string>
+    <string name="windSpead">Wind Spead</string>
 </resources>

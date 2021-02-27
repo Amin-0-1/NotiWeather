@@ -28,8 +28,6 @@ class Converter {
 
     fun jsonToAlertList(value: String?): List<Alert> {
 
-        Log.i("TAG", "jsonToAlertList: ++++++++++++++++++++++++++++++++++++++++++"+value.toString())
-
         return if(value.toString() != "null")
             Gson().fromJson(value, Array<Alert>::class.java).toList()
         else
