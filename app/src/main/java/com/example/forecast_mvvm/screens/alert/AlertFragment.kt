@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.ui.alert
+package com.example.forecast_mvvm.screens.alert
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.example.forecast_mvvm.R
 
 class AlertFragment : Fragment() {
@@ -26,7 +27,7 @@ class AlertFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
-        // TODO: Use the ViewModel
+        (activity as? AppCompatActivity)?.supportActionBar?.subtitle= null
     }
 
 }

@@ -6,7 +6,7 @@
     style="@style/temp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.WeatherFragment"
+    tools:context=".screens.home.WeatherFragment"
     tools:visibility="visible">
 
 

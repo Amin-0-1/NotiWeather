@@ -1,19 +1,15 @@
-package com.example.forecast_mvvm.ui
+package com.example.forecast_mvvm.screens
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import com.example.forecast_mvvm.MainViewModel
+import androidx.preference.PreferenceManager
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationMenu
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.coroutineScope
+import com.example.forecast_mvvm.utilities.SettingsSP
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,8 +22,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         prepareNavigation()
-
-
+        SettingsSP.setDefaultSettings(this)
     }
 
     //Navigation specific

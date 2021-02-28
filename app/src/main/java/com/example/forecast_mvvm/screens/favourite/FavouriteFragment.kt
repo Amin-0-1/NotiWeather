@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.ui.favourite
+package com.example.forecast_mvvm.screens.favourite
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.example.forecast_mvvm.R
 
 class FavouriteFragment : Fragment() {
@@ -26,7 +27,9 @@ class FavouriteFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(FavouriteViewModel::class.java)
-        // TODO: Use the ViewModel
+        (activity as? AppCompatActivity)?.supportActionBar?.subtitle= null
+
+
     }
 
 }

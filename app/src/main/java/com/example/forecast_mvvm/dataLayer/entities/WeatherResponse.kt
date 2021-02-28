@@ -11,14 +11,11 @@ data class WeatherResponse(
     @Embedded(prefix = "condition_")
     val weatherState: WeatherState,
 
-//    @TypeConverters(Converter::class)
     val daily: List<Daily>,
 
-//    @TypeConverters(Converter::class)
     @SerializedName("hourly")
     val hourly: List<WeatherState>,
 
-//    @TypeConverters(Converter::class)
     val alerts: List<Alert>? = listOf(),
 
     val lat: Double,
