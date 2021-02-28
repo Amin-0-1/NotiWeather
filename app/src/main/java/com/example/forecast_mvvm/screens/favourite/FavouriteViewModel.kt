@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.ui.favourite
+package com.example.forecast_mvvm.screens.favourite
 
 import androidx.lifecycle.ViewModel
 

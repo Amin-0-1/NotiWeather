@@ -1,0 +1,39 @@
+<resources>
+    <!-- location Preference -->
+    <string-array name="location_entries">
+        <item>GPS</item>
+        <item>set Location</item>
+    </string-array>
+
+    <string-array name="location_values">
+        <item>GPS</item>
+        <item>setLocation</item>
+    </string-array>
+
+    <!-- units Preference -->
+    <string-array name="units_entries">
+        <item>Kelvin</item>
+        <item>Celsius</item>
+        <item>Fahrenheit</item>
+    </string-array>
+
+    <string-array name="units_values">
+        <item>Standard</item>
+        <item>Metric</item>
+        <item>Imperial</item>
+    </string-array>
+<!--    metric: Celsius, imperial: Fahrenheit-->
+
+
+    <!-- units Preference -->
+    <string-array name="lang_entries">
+        <item>English</item>
+        <item>Arabic</item>
+    </string-array>
+
+    <string-array name="lang_values">
+        <item>en</item>
+        <item>ar</item>
+    </string-array>
+
+</resources>

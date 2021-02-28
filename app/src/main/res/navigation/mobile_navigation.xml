@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/alertFragment"
-        android:name="com.example.forecast_mvvm.ui.alert.AlertFragment"
+        android:name="com.example.forecast_mvvm.screens.alert.AlertFragment"
         android:label="Alert"
         tools:layout="@layout/alert_fragment" />
 
     <fragment
         android:id="@+id/favouriteFragment"
-        android:name="com.example.forecast_mvvm.ui.favourite.FavouriteFragment"
+        android:name="com.example.forecast_mvvm.screens.favourite.FavouriteFragment"
         android:label="Favourite"
         tools:layout="@layout/favourite_fragment" />
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.example.forecast_mvvm.ui.settings.SettingsFragment"
-        android:label="Settings" />
-    <fragment
         android:id="@+id/weatherFragment"
-        android:name="com.example.forecast_mvvm.ui.home.WeatherFragment"
+        android:name="com.example.forecast_mvvm.screens.home.WeatherFragment"
         android:label="Home"
         tools:layout="@layout/weather_fragment" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.forecast_mvvm.screens.settings.SettingsFragment"
+        android:label="settings" />
 </navigation>

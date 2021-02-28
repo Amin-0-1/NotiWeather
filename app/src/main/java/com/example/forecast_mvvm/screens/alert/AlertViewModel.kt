@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.ui.alert
+package com.example.forecast_mvvm.screens.alert
 
 import androidx.lifecycle.ViewModel
 

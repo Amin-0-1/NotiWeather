@@ -14,4 +14,21 @@
     <string name="pressure">Pressure</string>
     <string name="clouds">Clouds</string>
     <string name="windSpead">Wind Spead</string>
+
+    <!-- Preference Titles -->
+    <string name="location_header">Location</string>
+    <string name="units_header">Units</string>
+    <string name="language_header">Language</string>
+
+    <!-- Location Preferences -->
+    <string name="location_title">Location</string>
+
+    <!-- lang Preferences -->
+    <string name="lang_title">Language</string>
+
+    <!-- unit Preferences -->
+    <string name="units_title">Unit</string>
+
+
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>

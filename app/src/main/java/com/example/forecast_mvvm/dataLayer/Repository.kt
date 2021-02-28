@@ -10,12 +10,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 
-class Repository(val application: Application) {
+class Repository(private val application: Application) {
 
     private val remoteDataSource:RemoteDataSource = RemoteDataSource()
     private val localDataSource:LocalDataSource = LocalDataSource(application)
 
+
     suspend fun getWeatherData(lat: String, lon: String): LiveData<WeatherResponse> {
+        // TODO: 2/27/2021 check if there is internet access 
         var data = remoteDataSource.getCurrentWeatherData(lat,lon) // api call
 
         if(data.isSuccessful){
