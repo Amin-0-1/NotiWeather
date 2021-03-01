@@ -7,10 +7,12 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.LocationManager
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -18,11 +20,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.forecast_mvvm.dataLayer.Repository
-import com.example.forecast_mvvm.dataLayer.entities.LocationClass
 import com.example.forecast_mvvm.dataLayer.entities.WeatherResponse
 import com.example.forecast_mvvm.utilities.SettingsSP
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.*
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,24 +41,26 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     private var errorLiveData = MutableLiveData<Boolean>()
     private var currentWeatherLiveData = MutableLiveData<WeatherResponse>()
 
-    private lateinit var location:LocationClass
 
 
-
-    fun getWeather() {
+    fun getWeather(
+        requireActivity: FragmentActivity,
+        fusedLocationClient: FusedLocationProviderClient
+    ) {
 
         SettingsSP.loadSettings(context)
-//        Log.i("TAG", "getWeather: ${location.getLat()} ${location.getLon()}")
-        //todo :: get user location
-        CoroutineScope(Dispatchers.IO).launch {
-            val deferred = async{ repository.getWeatherData("30.033333", "31.233334") }
+        locationPermission(requireActivity, fusedLocationClient)
 
-            withContext(Dispatchers.Main){
-                deferred.await().observeForever {
-                    currentWeatherLiveData.postValue(it)
-                }
-            }
-        }
+//        Log.i("TAG", "getWeather: ${location.getLat()} ${location.getLon()}")
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val deferred = async{ repository.getWeatherData("30.033333", "31.233334") }
+//
+//            withContext(Dispatchers.Main){
+//                deferred.await().observeForever {
+//                    currentWeatherLiveData.postValue(it)
+//                }
+//            }
+//        }
     }
 
     fun getLoading(): LiveData<Boolean> {
@@ -99,16 +106,13 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
 
     //Location methods
-    fun locationPermission(activity:Activity,fusedLocationProviderClient: FusedLocationProviderClient) {
+    fun locationPermission(
+        activity: Activity,
+        fusedLocationProviderClient: FusedLocationProviderClient
+    ) {
         if (checkPermission()) {
             if (isLocationEnabled()) {
-                location =  LocationClass(context,fusedLocationProviderClient)
-                CoroutineScope(Dispatchers.IO).launch {
-                    val deferred = async { location.requestNewLocationData() }
-                    Log.i("TAG", "locationPermission: ${deferred.await().getLat()}")
-                }
-
-
+                requestNewLocationData(fusedLocationProviderClient)
             } else {
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 ContextCompat.startActivity(context, intent, null)
@@ -120,16 +124,78 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun checkPermission(): Boolean { // check permissions in run time
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestPermissions(activity: Activity) {
-        ActivityCompat.requestPermissions(activity,arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        ActivityCompat.requestPermissions(
+            activity, arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ), 1
+        )
     }
     private fun isLocationEnabled(): Boolean {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER)
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData(fusedLocationProviderClient: FusedLocationProviderClient) {
+        val locationRequest = LocationRequest()
+        locationRequest.interval = 0
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest.numUpdates = 1
+        fusedLocationProviderClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.myLooper()
+        )
+    }
+
+    fun getCityName(lat: Double, lon: Double): String {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val res:String
+        if (lat != 0.0 && lon != 0.0) {
+            try {
+                val addresses = geocoder.getFromLocation(lat, lon, 1)
+                res = addresses[0]..toString()
+
+                return res;
+            } catch (e: IOException) {
+                e.printStackTrace()
+                return "null"
+            }
+        }else{
+            Log.i("TAG", "getCityName: null")
+            return "null"
+        }
+    }
+
+    private val locationCallback: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            super.onLocationResult(locationResult)
+            val location = locationResult.lastLocation
+            Log.i("TAG", "onLocationResult: ${location.latitude}")
+            Log.i("TAG", "onLocationResult: ${location.longitude}")
+            CoroutineScope(Dispatchers.IO).launch {
+                val deferred = async{ repository.getWeatherData(
+                    location.latitude.toString(),
+                    location.longitude.toString()
+                ) }
+
+                withContext(Dispatchers.Main){
+                    deferred.await().observeForever {
+                        currentWeatherLiveData.postValue(it)
+                    }
+                }
+            }
+        }
     }
 
 }

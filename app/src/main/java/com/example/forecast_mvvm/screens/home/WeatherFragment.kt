@@ -13,8 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.forecast_mvvm.dataLayer.entities.WeatherState
 import com.example.forecast_mvvm.databinding.WeatherFragmentBinding
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,9 +30,9 @@ class WeatherFragment : Fragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = WeatherFragmentBinding.inflate(layoutInflater)
         return binding.root
@@ -45,7 +44,7 @@ class WeatherFragment : Fragment() {
 
         binding.screenGroup.visibility = View.GONE
 
-//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 //        viewModel.locationPermission(requireActivity(),fusedLocationClient)
         prepareLogic()
 
@@ -72,9 +71,10 @@ class WeatherFragment : Fragment() {
     // viewModel init and observers
     private fun prepareLogic() {
         observeViewModel()
-        viewModel.getWeather()
-//        viewModel.getWeather(requireActivity(),fusedLocationClient)
+//        viewModel.getWeather()
+        viewModel.getWeather(requireActivity(), fusedLocationClient)
     }
+
 
     @SuppressLint("SimpleDateFormat")
     private fun observeViewModel() {
@@ -105,7 +105,7 @@ class WeatherFragment : Fragment() {
 
             binding.groupLoading.visibility = View.GONE
             binding.screenGroup.visibility = View.VISIBLE
-            updateLocation(it.timezone)
+            updateLocation(it.lat,it.lon)
             updateCurrentDate(it.weatherState.dt)
             updateTemperature(it.weatherState)
             updateWeatherDetails(it.weatherState)
@@ -141,8 +141,15 @@ class WeatherFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle = viewModel.getCurrentDate(dt)
     }
 
-    private fun updateLocation(timezone: String) {
-        val string:String = timezone.substring(timezone.indexOf("/", 0, true) + 1)
-        (activity as? AppCompatActivity)?.supportActionBar?.title = string
+    private fun updateLocation(lat: Double, lon: Double) {
+        val value = viewModel.getCityName(lat,lon)
+
+        if(value != "null"){
+            (activity as? AppCompatActivity)?.supportActionBar?.title = value
+        }else{
+            (activity as? AppCompatActivity)?.supportActionBar?.title = "Loading"
+        }
+//        val string:String = timezone.substring(timezone.indexOf("/", 0, true) + 1)
+
     }
 }

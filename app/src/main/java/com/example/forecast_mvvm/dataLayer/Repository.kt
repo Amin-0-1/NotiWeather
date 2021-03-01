@@ -1,14 +1,9 @@
 package com.example.forecast_mvvm.dataLayer
 import android.app.Application
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import com.example.forecast_mvvm.dataLayer.entities.WeatherResponse
 import com.example.forecast_mvvm.dataLayer.local.LocalDataSource
 import com.example.forecast_mvvm.dataLayer.remote.RemoteDataSource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import retrofit2.Response
 
 class Repository(private val application: Application) {
 
