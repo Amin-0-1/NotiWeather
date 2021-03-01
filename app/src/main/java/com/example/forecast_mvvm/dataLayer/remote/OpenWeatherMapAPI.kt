@@ -16,7 +16,8 @@ interface OpenWeatherMapAPI {
     suspend fun getCurrentWeatherData(
         @Query("lat") latitude:String,
         @Query("lon") longitude:String,
-        @Query("units") unit:String="metric"
+        @Query("units") unit:String="metric",
+        @Query("lang") lang:String="en"
 
         ): Response<WeatherResponse>
 }

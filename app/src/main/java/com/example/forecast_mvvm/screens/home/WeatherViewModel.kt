@@ -8,11 +8,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
+import android.location.Location
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -31,6 +33,8 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+@Suppress("DEPRECATION")
 class WeatherViewModel(application: Application) : AndroidViewModel(application) {
 
 //    private var remoteDataSource: RemoteDataSource = RemoteDataSource()
@@ -47,20 +51,8 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         requireActivity: FragmentActivity,
         fusedLocationClient: FusedLocationProviderClient
     ) {
-
         SettingsSP.loadSettings(context)
-        locationPermission(requireActivity, fusedLocationClient)
-
-//        Log.i("TAG", "getWeather: ${location.getLat()} ${location.getLon()}")
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val deferred = async{ repository.getWeatherData("30.033333", "31.233334") }
-//
-//            withContext(Dispatchers.Main){
-//                deferred.await().observeForever {
-//                    currentWeatherLiveData.postValue(it)
-//                }
-//            }
-//        }
+        checkLocationPermission(requireActivity, fusedLocationClient)
     }
 
     fun getLoading(): LiveData<Boolean> {
@@ -72,6 +64,9 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     fun getCurrentWeatherLiveData(): LiveData<WeatherResponse> {
         return currentWeatherLiveData
     }
+
+
+
 
     @SuppressLint("SimpleDateFormat")
     fun extractTime(dt: Long): String {
@@ -94,6 +89,24 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         return SimpleDateFormat("dd MMM yyyy").format(Date(dt * 1000))
     }
 
+    fun getCityName(lat: Double, lon: Double): String {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val res:String
+        if (lat != 0.0 && lon != 0.0) {
+            try {
+                val addresses = geocoder.getFromLocation(lat, lon, 1)
+                res = addresses[0].locality.toString()
+
+                return res;
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            return "null"
+        }else{
+            Log.i("TAG", "getCityName: null")
+            return "null"
+        }
+    }
     fun checkWeatherStateDateValidation(weatherResponse: WeatherResponse): WeatherResponse? {
         val current = Calendar.getInstance().timeInMillis
         val timeStamp = weatherResponse.weatherState.dt
@@ -105,14 +118,25 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     }
 
 
+
+
+
     //Location methods
-    fun locationPermission(
+    fun checkLocationPermission(
         activity: Activity,
         fusedLocationProviderClient: FusedLocationProviderClient
     ) {
         if (checkPermission()) {
             if (isLocationEnabled()) {
-                requestNewLocationData(fusedLocationProviderClient)
+                if(isNetworkAvailable(context)){
+                    Log.i("TAG", "isConnected: ")
+                    requestNewLocationData(fusedLocationProviderClient)
+                }
+                else{
+                    Log.i("TAG", "else: ")
+                    fetchRepoData()
+                }
+
             } else {
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 ContextCompat.startActivity(context, intent, null)
@@ -121,6 +145,12 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             requestPermissions(activity)
         }
 
+    }
+
+    private fun isNetworkAvailable(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        return activeNetwork?.isConnectedOrConnecting == true
     }
 
     private fun checkPermission(): Boolean { // check permissions in run time
@@ -149,7 +179,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     private fun requestNewLocationData(fusedLocationProviderClient: FusedLocationProviderClient) {
         val locationRequest = LocationRequest()
         locationRequest.interval = 0
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         locationRequest.numUpdates = 1
         fusedLocationProviderClient.requestLocationUpdates(
             locationRequest,
@@ -157,32 +187,28 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             Looper.myLooper()
         )
     }
-
-    fun getCityName(lat: Double, lon: Double): String {
-        val geocoder = Geocoder(context, Locale.getDefault())
-        val res:String
-        if (lat != 0.0 && lon != 0.0) {
-            try {
-                val addresses = geocoder.getFromLocation(lat, lon, 1)
-                res = addresses[0]..toString()
-
-                return res;
-            } catch (e: IOException) {
-                e.printStackTrace()
-                return "null"
-            }
-        }else{
-            Log.i("TAG", "getCityName: null")
-            return "null"
-        }
-    }
-
     private val locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
             val location = locationResult.lastLocation
             Log.i("TAG", "onLocationResult: ${location.latitude}")
             Log.i("TAG", "onLocationResult: ${location.longitude}")
+            fetchRepoData(location)
+        }
+    }
+
+    fun fetchRepoData(location: Location? = null){
+        if(location == null){ // no internet connection
+            CoroutineScope(Dispatchers.IO).launch {
+                val deferred = async{ repository.getWeatherData() }
+
+                withContext(Dispatchers.Main){
+                    deferred.await().observeForever {
+                        currentWeatherLiveData.postValue(it)
+                    }
+                }
+            }
+        }else{
             CoroutineScope(Dispatchers.IO).launch {
                 val deferred = async{ repository.getWeatherData(
                     location.latitude.toString(),
@@ -196,6 +222,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                 }
             }
         }
+
     }
 
 }
