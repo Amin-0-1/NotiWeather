@@ -7,7 +7,6 @@ import android.app.Application
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -30,6 +29,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.*
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -47,16 +47,16 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     private var errorLiveData = MutableLiveData<Boolean>()
     private var currentWeatherLiveData = MutableLiveData<WeatherResponse>()
 
+    private val mPreferences = context.getSharedPreferences("location", MODE_PRIVATE);
 
 
     fun getWeather(
-        requireActivity: FragmentActivity,
-        fusedLocationClient: FusedLocationProviderClient
+            requireActivity: FragmentActivity,
+            fusedLocationClient: FusedLocationProviderClient
     ) {
         SettingsSP.loadSettings(context)
 
-        val mPreferences = context.getSharedPreferences("location", MODE_PRIVATE);
-        Log.i("TAG", "getWeather: shared is "+mPreferences.getString("lat","null"))
+        Log.i("TAG", "getWeather: shared is " + mPreferences.getString("lat", "null"))
         checkLocationPermission(requireActivity, fusedLocationClient)
     }
 
@@ -102,6 +102,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
                 return res;
             } catch (e: IOException) {
+                Log.i("TAG", "getCityName: catch")
                 e.printStackTrace()
             }
             return "null"
@@ -125,15 +126,22 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
 
     //Location methods
-    fun checkLocationPermission(
-        activity: Activity,
-        fusedLocationProviderClient: FusedLocationProviderClient
+    private fun checkLocationPermission(
+            activity: Activity,
+            fusedLocationProviderClient: FusedLocationProviderClient
     ) {
         if (checkPermission()) {
             if (isLocationEnabled()) {
                 if(isNetworkAvailable(context)){
                     Log.i("TAG", "isConnected: ")
-                    requestNewLocationData(fusedLocationProviderClient)
+
+                    if(checkLocationInSettings()){
+                        val location = Location("") //provider name is unnecessary
+                        location.latitude = mPreferences.getString("lat",null)?.toDouble() !!
+                        location.longitude = mPreferences.getString("lon",null)?.toDouble() !!
+                        fetchRepoData(location)
+                    }else
+                        requestNewLocationData(fusedLocationProviderClient)
                 }
                 else{
                     Log.i("TAG", "else: ")
@@ -150,6 +158,12 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
     }
 
+    private fun checkLocationInSettings(): Boolean {
+        val mPreferences = context.getSharedPreferences("location", MODE_PRIVATE);
+        Log.i("TAG", "getWeather: shared is " + mPreferences.getString("lat", "null"))
+        return mPreferences.getString("lat", null) != null
+    }
+
     private fun isNetworkAvailable(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
@@ -158,23 +172,23 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
     private fun checkPermission(): Boolean { // check permissions in run time
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestPermissions(activity: Activity) {
         ActivityCompat.requestPermissions(
-            activity, arrayOf(
+                activity, arrayOf(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ), 1
+        ), 1
         )
     }
     private fun isLocationEnabled(): Boolean {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
+                LocationManager.NETWORK_PROVIDER
         )
     }
 
@@ -185,9 +199,9 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         locationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         locationRequest.numUpdates = 1
         fusedLocationProviderClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.myLooper()
+                locationRequest,
+                locationCallback,
+                Looper.myLooper()
         )
     }
     private val locationCallback: LocationCallback = object : LocationCallback() {
@@ -214,8 +228,8 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         }else{
             CoroutineScope(Dispatchers.IO).launch {
                 val deferred = async{ repository.getWeatherData(
-                    location.latitude.toString(),
-                    location.longitude.toString()
+                        location.latitude.toString(),
+                        location.longitude.toString()
                 ) }
 
                 withContext(Dispatchers.Main){
@@ -225,7 +239,6 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                 }
             }
         }
-
     }
 
     fun getLocalDate() {

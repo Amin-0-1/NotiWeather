@@ -16,6 +16,7 @@ class DailyAdapter(
 ): RecyclerView.Adapter<DailyAdapter.MyViewHolder>() {
 
     fun setAdapterData(daily: List<Daily>) {
+        dailyList.clear()
         dailyList.addAll(daily)
         notifyDataSetChanged()
     }

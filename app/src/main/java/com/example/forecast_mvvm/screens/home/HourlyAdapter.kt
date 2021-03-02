@@ -16,6 +16,7 @@ class HourlyAdapter(
 ) : RecyclerView.Adapter<HourlyAdapter.MyViewHolder>(){
 
     fun setAdapterData(models: List<WeatherState>) {
+        hourlyList.clear()
         hourlyList.addAll(models)
         notifyDataSetChanged()
     }
