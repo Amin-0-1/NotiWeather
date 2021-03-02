@@ -5,7 +5,9 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -22,7 +24,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.forecast_mvvm.dataLayer.Repository
-import com.example.forecast_mvvm.dataLayer.entities.WeatherResponse
+import com.example.forecast_mvvm.dataLayer.remote.WeatherResponse
 import com.example.forecast_mvvm.utilities.SettingsSP
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -52,6 +54,9 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         fusedLocationClient: FusedLocationProviderClient
     ) {
         SettingsSP.loadSettings(context)
+
+        val mPreferences = context.getSharedPreferences("location", MODE_PRIVATE);
+        Log.i("TAG", "getWeather: shared is "+mPreferences.getString("lat","null"))
         checkLocationPermission(requireActivity, fusedLocationClient)
     }
 
@@ -64,8 +69,6 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     fun getCurrentWeatherLiveData(): LiveData<WeatherResponse> {
         return currentWeatherLiveData
     }
-
-
 
 
     @SuppressLint("SimpleDateFormat")
@@ -223,6 +226,12 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             }
         }
 
+    }
+
+    fun getLocalDate() {
+        repository.getLocal().observeForever {
+            currentWeatherLiveData.postValue(it)
+        }
     }
 
 }

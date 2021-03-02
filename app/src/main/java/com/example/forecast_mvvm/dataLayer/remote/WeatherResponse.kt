@@ -1,7 +1,10 @@
-package com.example.forecast_mvvm.dataLayer.entities
+package com.example.forecast_mvvm.dataLayer.remote
 
 
 import androidx.room.*
+import com.example.forecast_mvvm.dataLayer.entities.models.Alert
+import com.example.forecast_mvvm.dataLayer.entities.models.Daily
+import com.example.forecast_mvvm.dataLayer.entities.models.WeatherState
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "weather")

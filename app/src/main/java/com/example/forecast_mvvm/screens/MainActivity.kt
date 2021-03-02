@@ -13,7 +13,6 @@ import com.example.forecast_mvvm.utilities.SettingsSP
 
 class MainActivity : AppCompatActivity() {
 
-
     lateinit var binding:ActivityMainBinding
     lateinit var navController:NavController
     override fun onCreate(savedInstanceState: Bundle?) {

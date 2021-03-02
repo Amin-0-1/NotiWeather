@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.dataLayer.entities
+package com.example.forecast_mvvm.dataLayer.entities.models
 
 
 import com.google.gson.annotations.SerializedName

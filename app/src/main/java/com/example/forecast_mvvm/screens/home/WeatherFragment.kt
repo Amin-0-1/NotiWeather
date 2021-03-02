@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.forecast_mvvm.dataLayer.entities.WeatherState
+import com.example.forecast_mvvm.dataLayer.entities.models.WeatherState
 import com.example.forecast_mvvm.databinding.WeatherFragmentBinding
 import com.google.android.gms.location.*
 import java.text.SimpleDateFormat
@@ -72,6 +72,7 @@ class WeatherFragment : Fragment() {
     private fun prepareLogic() {
         observeViewModel()
 //        viewModel.getWeather()
+        viewModel.getLocalDate()
         viewModel.getWeather(requireActivity(), fusedLocationClient)
     }
 

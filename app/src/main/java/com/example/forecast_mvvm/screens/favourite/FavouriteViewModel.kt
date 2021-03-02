@@ -1,7 +1,14 @@
 package com.example.forecast_mvvm.screens.favourite
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import com.example.forecast_mvvm.dataLayer.Repository
 
-class FavouriteViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+class FavouriteViewModel(application: Application) : AndroidViewModel(application) {
+    private var repository: Repository = Repository(application)
+
+    fun saveFavouriteCoord(latitude: Double, longitude: Double) {
+        repository.saveFavouriteCoord(latitude,longitude)
+    }
+
 }

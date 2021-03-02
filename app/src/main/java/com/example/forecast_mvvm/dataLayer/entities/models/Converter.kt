@@ -1,6 +1,5 @@
-package com.example.forecast_mvvm.dataLayer.entities
+package com.example.forecast_mvvm.dataLayer.entities.models
 
-import android.util.Log
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 

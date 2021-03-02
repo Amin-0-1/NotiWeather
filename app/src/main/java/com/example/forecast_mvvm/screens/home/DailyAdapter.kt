@@ -7,12 +7,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast_mvvm.R
-import com.example.forecast_mvvm.dataLayer.entities.Daily
+import com.example.forecast_mvvm.dataLayer.entities.models.Daily
 import com.squareup.picasso.Picasso
 
 class DailyAdapter(
-        private var dailyList: MutableList<Daily>,
-        private var viewModel: WeatherViewModel
+    private var dailyList: MutableList<Daily>,
+    private var viewModel: WeatherViewModel
 ): RecyclerView.Adapter<DailyAdapter.MyViewHolder>() {
 
     fun setAdapterData(daily: List<Daily>) {

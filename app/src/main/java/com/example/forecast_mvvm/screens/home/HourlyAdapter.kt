@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast_mvvm.R
-import com.example.forecast_mvvm.dataLayer.entities.WeatherState
+import com.example.forecast_mvvm.dataLayer.entities.models.WeatherState
 import com.squareup.picasso.Picasso
 
 class HourlyAdapter(

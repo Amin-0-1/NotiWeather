@@ -5,14 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.forecast_mvvm.dataLayer.entities.Converter
-import com.example.forecast_mvvm.dataLayer.entities.WeatherResponse
+import com.example.forecast_mvvm.dataLayer.entities.FavouriteCoordination
+import com.example.forecast_mvvm.dataLayer.entities.models.Converter
+import com.example.forecast_mvvm.dataLayer.local.Daos.FavouriteCoordDao
+import com.example.forecast_mvvm.dataLayer.local.Daos.WeatherDao
+import com.example.forecast_mvvm.dataLayer.remote.WeatherResponse
 // dt to long
-@Database(entities = [WeatherResponse::class], version = 4)
+@Database(entities = [WeatherResponse::class,FavouriteCoordination::class], version = 5)
 @TypeConverters(Converter::class)
 
  abstract class WeatherForecastDatabase:RoomDatabase() {
     abstract fun weatherDao(): WeatherDao
+    abstract fun favCoordDao(): FavouriteCoordDao
 
     companion object{
         var db:WeatherForecastDatabase? = null

@@ -10,7 +10,6 @@ plugins {
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
-
     defaultConfig {
         applicationId "com.example.forecast_mvvm"
         minSdkVersion 19
@@ -44,6 +43,7 @@ android {
 
 dependencies {
 
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -79,11 +79,11 @@ dependencies {
     implementation "com.squareup.picasso:picasso:$picasso"
 
     //location
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
+    //map
+    implementation "com.google.android.gms:play-services-maps:$map_version"
 
-    implementation "androidx.core:core-ktx:1.0.0"
-    implementation "androidx.constraintlayout:constraintlayout:1.1.3"
 
 
 
