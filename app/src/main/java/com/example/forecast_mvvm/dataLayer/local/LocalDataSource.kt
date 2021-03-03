@@ -17,7 +17,7 @@ class LocalDataSource(application:Application) {
         weatherDao.insert(body)
     }
 
-    fun getWeatherData(): LiveData<WeatherResponse> {
+    fun getWeatherData(): WeatherResponse {
         return weatherDao.getWeatherData()
     }
 
@@ -27,16 +27,20 @@ class LocalDataSource(application:Application) {
         favCoordDao.insertFavCoord(FavouriteCoordination(latitude,longitude,title))
     }
 
-    fun getAllFavouriteCoord(): LiveData<List<FavouriteCoordination>> {
+    fun getAllFavouriteCoord(): List<FavouriteCoordination> {
         return favCoordDao.getAllFavouriteCoord()
     }
-    fun getNullFavouriteLocations():LiveData<List<FavouriteCoordination>>{
+    fun getNullFavouriteLocations():List<FavouriteCoordination>{
         return favCoordDao.getNullFavouriteLocations()
     }
 
-    fun getNotNullFavourite(): LiveData<List<FavouriteCoordination>> {
+    fun getNotNullFavourite(): List<FavouriteCoordination> {
         return favCoordDao.getNotNullFavourite()
 
+    }
+
+    fun deleteFavourite(lat: Double, lon: Double) {
+        favCoordDao.deleteFavourite(lat,lon)
     }
 
 }

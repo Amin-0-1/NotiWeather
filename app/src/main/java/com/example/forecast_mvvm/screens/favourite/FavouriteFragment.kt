@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -53,7 +54,8 @@ class FavouriteFragment : Fragment() {
         val horizontalLayout = LinearLayoutManager(context)
         horizontalLayout.orientation = LinearLayoutManager.VERTICAL
         binding.favouriteRecycler.layoutManager = horizontalLayout
-        favouriteAdapter = FavouriteAdapter(listOf("mahmoud","amin","muhammed","salma","samy") as MutableList<String>, viewModel)
+//        favouriteAdapter = FavouriteAdapter(listOf("mahmoud","amin","muhammed","salma","samy") as MutableList<String>, viewModel)
+        favouriteAdapter = FavouriteAdapter(mutableListOf(), viewModel)
         binding.favouriteRecycler.adapter = favouriteAdapter
     }
 
@@ -64,12 +66,20 @@ class FavouriteFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.getNullLocations().observe(viewLifecycleOwner, Observer {
-            viewModel.updateLocaility(it)
-        })
+//        viewModel.getNullLocations().observe(viewLifecycleOwner, Observer {
+//            viewModel.updateLocaility(it)
+//        })
         viewModel.getLocations().observe(viewLifecycleOwner, Observer {
 //            viewModel.
             Log.i("TAG", "observeViewModel: $it")
+            favouriteAdapter.setAdapterData(it)
+        })
+        viewModel.getMessage().observe(viewLifecycleOwner, Observer {
+            if(it == true){
+                Toast.makeText(requireContext(),"Deleted Successfully",Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(requireContext(),"Data Will be Available once you're connected to Internet",Toast.LENGTH_SHORT).show()
+            }
         })
     }
 

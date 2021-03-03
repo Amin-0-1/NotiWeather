@@ -10,14 +10,17 @@ import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
 @Dao
 interface FavouriteCoordDao {
     @Query("SELECT * FROM favCoord")
-    fun getAllFavouriteCoord(): LiveData<List<FavouriteCoordination>>
+    fun getAllFavouriteCoord(): List<FavouriteCoordination>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertFavCoord(favCoord: FavouriteCoordination)
 
     @Query("Select * from favCoord where title is null")
-    fun getNullFavouriteLocations(): LiveData<List<FavouriteCoordination>>
+    fun getNullFavouriteLocations(): List<FavouriteCoordination>
 
     @Query("select * from favCoord where title is not null")
-    fun getNotNullFavourite(): LiveData<List<FavouriteCoordination>>
+    fun getNotNullFavourite(): List<FavouriteCoordination>
+
+    @Query("delete from favCoord where lat is :latitude and lon is :longitude ")
+    fun deleteFavourite(latitude: Double, longitude: Double)
 }

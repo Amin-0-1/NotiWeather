@@ -13,7 +13,7 @@ class Repository(private val application: Application) {
     private val localDataSource:LocalDataSource = LocalDataSource(application)
 
 
-    suspend fun getWeatherData(lat: String="", lon: String=""): LiveData<WeatherResponse> {
+    suspend fun getWeatherData(lat: String="", lon: String=""): WeatherResponse {
 
         if(lat != "" && lon != ""){
             val data = remoteDataSource.getCurrentWeatherData(lat,lon) // api call
@@ -34,21 +34,25 @@ class Repository(private val application: Application) {
         localDataSource.insertFavouriteCoord(latitude,longitude,title)
     }
 
-    fun getLocalWeather(): LiveData<WeatherResponse> {
+    fun getLocalWeather(): WeatherResponse {
         return localDataSource.getWeatherData()
     }
 
 
-    fun getNullFavouriteLocations(): LiveData<List<FavouriteCoordination>> {
+    fun getNullFavouriteLocations(): List<FavouriteCoordination> {
         return localDataSource.getNullFavouriteLocations()
     }
 
-    fun getNotNullFavourite(): LiveData<List<FavouriteCoordination>> {
+    fun getNotNullFavourite(): List<FavouriteCoordination> {
         return localDataSource.getNotNullFavourite()
     }
 
-    fun getAllFavourite(): LiveData<List<FavouriteCoordination>> {
+    fun getAllFavourite(): List<FavouriteCoordination> {
         return localDataSource.getAllFavouriteCoord()
+    }
+
+    fun deleteFavourite(lat: Double, lon: Double) {
+        localDataSource.deleteFavourite(lat,lon)
     }
 
 

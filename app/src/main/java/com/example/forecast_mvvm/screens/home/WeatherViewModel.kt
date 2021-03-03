@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.forecast_mvvm.dataLayer.Repository
 import com.example.forecast_mvvm.dataLayer.remote.response.WeatherResponse
 import com.example.forecast_mvvm.utilities.SettingsSP
@@ -43,6 +44,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     private val context = application.applicationContext
     private val loadingLiveData = MutableLiveData<Boolean>()
     private var errorLiveData = MutableLiveData<Boolean>()
+//    private var currentWeatherLiveData = MutableLiveData<WeatherResponse>()
     private var currentWeatherLiveData = MutableLiveData<WeatherResponse>()
 
     private val mPreferences = context.getSharedPreferences("location", MODE_PRIVATE);
@@ -54,7 +56,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     ) {
         SettingsSP.loadSettings(context)
 
-        Log.i("TAG", "getWeather: shared is " + mPreferences.getString("lat", "null"))
+        getLocalWeatherDate()
         checkLocationPermission(requireActivity, fusedLocationClient)
     }
 
@@ -142,8 +144,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                         fetchRepoData(location)
                     }else
                         requestNewLocationData(fusedLocationProviderClient)
-                }
-                else{
+                } else{
                     Log.i("TAG", "else: ")
                     fetchRepoData()
                 }
@@ -214,37 +215,51 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun fetchRepoData(location: Location? = null){
-        if(location == null){ // no internet connection
-            CoroutineScope(Dispatchers.IO).launch {
-                val deferred = async{ repository.getWeatherData() }
 
-                withContext(Dispatchers.Main){
-                    deferred.await().observeForever {
-                        currentWeatherLiveData.postValue(it)
-                    }
-                }
+        if(location == null){ // gps enabled in settings
+            viewModelScope.launch {
+                currentWeatherLiveData.postValue(repository.getWeatherData())
             }
-        }else{
-            CoroutineScope(Dispatchers.IO).launch {
-                val deferred = async{ repository.getWeatherData(
-                        location.latitude.toString(),
-                        location.longitude.toString()
-                ) }
-
-                withContext(Dispatchers.Main){
-                    deferred.await().observeForever {
-                        currentWeatherLiveData.postValue(it)
-                    }
-                }
+        }else{ // set location in settings is enabled
+            viewModelScope.launch {
+                currentWeatherLiveData.postValue(repository.getWeatherData(location.latitude.toString(),location.longitude.toString()))
             }
         }
+//        if(location == null){ // no internet connection
+//            CoroutineScope(Dispatchers.IO).launch {
+//                val deferred = async{ repository.getWeatherData() }
+//
+//                withContext(Dispatchers.Main){
+//                    deferred.await().observeForever {
+//                        currentWeatherLiveData.postValue(it)
+//                    }
+//                }
+//            }
+//        }else{
+//            CoroutineScope(Dispatchers.IO).launch {
+//                val deferred = async{ repository.getWeatherData(
+//                        location.latitude.toString(),
+//                        location.longitude.toString()
+//                ) }
+//
+//                withContext(Dispatchers.Main){
+//                    deferred.await().observeForever {
+//                        currentWeatherLiveData.postValue(it)
+//                    }
+//                }
+//            }
+//        }
     }
 
-    fun getLocalDate() {
-        repository.getLocalWeather().observeForever {
-            if(it != null)
-            currentWeatherLiveData.postValue(it)
+    private fun getLocalWeatherDate() {
+
+        viewModelScope.launch {
+            currentWeatherLiveData.postValue(repository.getLocalWeather())
         }
+//        repository.getLocalWeather().observeForever {
+//            if(it != null)
+//                currentWeatherLiveData.postValue(it)
+//        }
     }
 
 }

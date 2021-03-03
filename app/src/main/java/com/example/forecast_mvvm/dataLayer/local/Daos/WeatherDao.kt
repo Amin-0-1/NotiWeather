@@ -11,7 +11,7 @@ import com.example.forecast_mvvm.dataLayer.remote.response.WeatherResponse
 interface WeatherDao {
 
     @Query("SELECT * FROM weather")
-    fun getWeatherData(): LiveData<WeatherResponse>
+    fun getWeatherData(): WeatherResponse
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(weatherState: WeatherResponse)

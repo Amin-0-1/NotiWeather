@@ -36,15 +36,16 @@
 
             <TextView
                 android:id="@+id/fav_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/left_20"
                 android:textColor="@color/black"
-                android:textSize="25sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 app:drawableLeftCompat="@drawable/ic_baseline_add_location_24"
                 app:drawableStartCompat="@drawable/ic_baseline_add_location_24"
                 app:layout_constraintBottom_toBottomOf="@+id/fixed_layout"
+                app:layout_constraintEnd_toStartOf="@+id/delete_btn"
                 app:layout_constraintStart_toStartOf="@+id/fixed_layout"
                 app:layout_constraintTop_toTopOf="@+id/fixed_layout"
                 tools:text="Cairo" />

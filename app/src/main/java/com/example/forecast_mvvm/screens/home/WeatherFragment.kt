@@ -71,8 +71,7 @@ class WeatherFragment : Fragment() {
     // viewModel init and observers
     private fun prepareLogic() {
         observeViewModel()
-//        viewModel.getWeather()
-        viewModel.getLocalDate()
+
         viewModel.getWeather(requireActivity(), fusedLocationClient)
     }
 
