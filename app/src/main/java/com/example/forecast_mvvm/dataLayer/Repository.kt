@@ -2,8 +2,9 @@ package com.example.forecast_mvvm.dataLayer
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.example.forecast_mvvm.dataLayer.remote.WeatherResponse
+import com.example.forecast_mvvm.dataLayer.remote.response.WeatherResponse
 import com.example.forecast_mvvm.dataLayer.local.LocalDataSource
+import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
 import com.example.forecast_mvvm.dataLayer.remote.RemoteDataSource
 
 class Repository(private val application: Application) {
@@ -13,7 +14,6 @@ class Repository(private val application: Application) {
 
 
     suspend fun getWeatherData(lat: String="", lon: String=""): LiveData<WeatherResponse> {
-        // TODO: 2/27/2021 check if there is internet access
 
         if(lat != "" && lon != ""){
             val data = remoteDataSource.getCurrentWeatherData(lat,lon) // api call
@@ -29,17 +29,26 @@ class Repository(private val application: Application) {
     }
 
 
-//
-//    fun testSaveFavCoord(){
-//        localDataSource.insertFavourite()
-//    }
 
-    fun saveFavouriteCoord(latitude: Double, longitude: Double) {
-        localDataSource.insertFavouriteCoord(latitude,longitude)
+     fun saveFavouriteCoord(latitude: Double, longitude: Double, title: String?) {
+        localDataSource.insertFavouriteCoord(latitude,longitude,title)
     }
 
-    fun getLocal(): LiveData<WeatherResponse> {
+    fun getLocalWeather(): LiveData<WeatherResponse> {
         return localDataSource.getWeatherData()
+    }
+
+
+    fun getNullFavouriteLocations(): LiveData<List<FavouriteCoordination>> {
+        return localDataSource.getNullFavouriteLocations()
+    }
+
+    fun getNotNullFavourite(): LiveData<List<FavouriteCoordination>> {
+        return localDataSource.getNotNullFavourite()
+    }
+
+    fun getAllFavourite(): LiveData<List<FavouriteCoordination>> {
+        return localDataSource.getAllFavouriteCoord()
     }
 
 

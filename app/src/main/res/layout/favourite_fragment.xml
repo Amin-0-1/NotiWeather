@@ -7,6 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".screens.favourite.FavouriteFragment">
 
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favourite_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        tools:listitem="@layout/favourite_item" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
@@ -14,11 +22,13 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
+        android:contentDescription="@string/imgDesc"
         android:src="@drawable/ic_add_24"
         app:hoveredFocusedTranslationZ="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="30dp"
-        app:pressedTranslationZ="10dp" />
+        app:pressedTranslationZ="10dp"
+        android:focusable="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

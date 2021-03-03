@@ -1,5 +1,6 @@
 package com.example.forecast_mvvm.dataLayer.remote
 
+import com.example.forecast_mvvm.dataLayer.remote.response.WeatherResponse
 import com.example.forecast_mvvm.utilities.SettingsSP
 import retrofit2.Response
 

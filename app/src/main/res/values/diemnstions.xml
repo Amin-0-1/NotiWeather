@@ -2,4 +2,5 @@
 <resources>
     <dimen name="xProg">100dp</dimen>
     <dimen name="yProg">200dp</dimen>
+    <dimen name="left_20">20dp</dimen>
 </resources>

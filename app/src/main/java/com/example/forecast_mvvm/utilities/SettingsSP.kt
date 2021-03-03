@@ -1,5 +1,6 @@
 package com.example.forecast_mvvm.utilities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
@@ -10,18 +11,23 @@ object SettingsSP {
     private lateinit var location:String
     private lateinit var units:String
     private lateinit var language:String
+    private lateinit var sp:SharedPreferences
 
     fun setDefaultSettings(context:Context){
         PreferenceManager.setDefaultValues(context, R.xml.root_preferences,false)
     }
 
     fun loadSettings(context: Context){
-        val sp =  PreferenceManager.getDefaultSharedPreferences(context)
+        sp =  PreferenceManager.getDefaultSharedPreferences(context)
         location = sp.getString("GPS", "")!!
         units = sp.getString("Kelvin","")!!
         language = sp.getString("English","")!!
     }
 
+    @SuppressLint("CommitPrefEdits")
+    fun setLocation(){
+        sp.edit().putString("GPS","setLocation").apply()
+    }
     fun getLocationSetting():String{
         return this.location
     }

@@ -23,23 +23,21 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.forecast_mvvm.dataLayer.Repository
-import com.example.forecast_mvvm.dataLayer.remote.WeatherResponse
+import com.example.forecast_mvvm.dataLayer.remote.response.WeatherResponse
 import com.example.forecast_mvvm.utilities.SettingsSP
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.*
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-@Suppress("DEPRECATION")
+@Suppress("DEPRECATION", "SENSELESS_COMPARISON")
 class WeatherViewModel(application: Application) : AndroidViewModel(application) {
 
-//    private var remoteDataSource: RemoteDataSource = RemoteDataSource()
     private var repository:Repository = Repository(application)
     @SuppressLint("StaticFieldLeak")
     private val context = application.applicationContext
@@ -137,8 +135,10 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
                     if(checkLocationInSettings()){
                         val location = Location("") //provider name is unnecessary
+
                         location.latitude = mPreferences.getString("lat",null)?.toDouble() !!
                         location.longitude = mPreferences.getString("lon",null)?.toDouble() !!
+                        Log.i("TAG", "checkLocationPermission: ${location.longitude}")
                         fetchRepoData(location)
                     }else
                         requestNewLocationData(fusedLocationProviderClient)
@@ -160,8 +160,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
     private fun checkLocationInSettings(): Boolean {
         val mPreferences = context.getSharedPreferences("location", MODE_PRIVATE);
-        Log.i("TAG", "getWeather: shared is " + mPreferences.getString("lat", "null"))
-        return mPreferences.getString("lat", null) != null
+        return mPreferences.getString("lat", null) != null && SettingsSP.getLocationSetting() != "GPS"
     }
 
     private fun isNetworkAvailable(context: Context): Boolean {
@@ -242,7 +241,8 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun getLocalDate() {
-        repository.getLocal().observeForever {
+        repository.getLocalWeather().observeForever {
+            if(it != null)
             currentWeatherLiveData.postValue(it)
         }
     }

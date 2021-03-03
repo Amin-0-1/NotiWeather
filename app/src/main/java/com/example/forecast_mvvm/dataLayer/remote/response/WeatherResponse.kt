@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.dataLayer.remote
+package com.example.forecast_mvvm.dataLayer.remote.response
 
 
 import androidx.room.*

@@ -50,8 +50,8 @@ class WeatherFragment : Fragment() {
 
 
         // preparing the recycler views for the fragment
-        val horizontalLayout:LinearLayoutManager = LinearLayoutManager(context)
-        val verticalLayout:LinearLayoutManager = LinearLayoutManager(context)
+        val horizontalLayout = LinearLayoutManager(context)
+        val verticalLayout = LinearLayoutManager(context)
 
         horizontalLayout.orientation = LinearLayoutManager.HORIZONTAL
         verticalLayout.orientation = LinearLayoutManager.VERTICAL
