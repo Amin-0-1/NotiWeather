@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -100,11 +101,13 @@ class WeatherFragment : Fragment() {
             val currentDateAndTime: String = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Date())
             Log.i("TAG", "observeViewModel: $currentDateAndTime")
 
+            if(it != null){
+
+            }
             hourlyAdapter.setAdapterData(it.hourly)
             dailyAdapter.setAdapterData(it.daily)
 
-            binding.groupLoading.visibility = View.GONE
-            binding.screenGroup.visibility = View.VISIBLE
+            updateBlockingUi()
             updateLocation(it.lat,it.lon)
             updateCurrentDate(it.weatherState.dt)
             updateTemperature(it.weatherState)
@@ -114,12 +117,19 @@ class WeatherFragment : Fragment() {
         })
 
         viewModel.getErrorState().observe(viewLifecycleOwner, Observer {
+            Toast.makeText(context,"no Internet Connection !!",Toast.LENGTH_SHORT).show()
+            updateBlockingUi()
 
         })
 
         viewModel.getLoading().observe(viewLifecycleOwner, Observer {
 
         })
+    }
+
+    private fun updateBlockingUi() {
+        binding.groupLoading.visibility = View.GONE
+        binding.screenGroup.visibility = View.VISIBLE
     }
 
     @SuppressLint("SetTextI18n")

@@ -43,7 +43,11 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     @SuppressLint("StaticFieldLeak")
     private val context = application.applicationContext
     private val loadingLiveData = MutableLiveData<Boolean>()
+
+//    val getloading:LiveData<Boolean>get() = loadingLiveData // wesam
+
     private var errorLiveData = MutableLiveData<Boolean>()
+
 //    private var currentWeatherLiveData = MutableLiveData<WeatherResponse>()
     private var currentWeatherLiveData = MutableLiveData<WeatherResponse>()
 
@@ -137,24 +141,27 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
                     if(checkLocationInSettings()){
                         val location = Location("") //provider name is unnecessary
-
                         location.latitude = mPreferences.getString("lat",null)?.toDouble() !!
                         location.longitude = mPreferences.getString("lon",null)?.toDouble() !!
                         Log.i("TAG", "checkLocationPermission: ${location.longitude}")
                         fetchRepoData(location)
-                    }else
+                    }else {
+                        Log.i("TAG", "elsesss: ")
                         requestNewLocationData(fusedLocationProviderClient)
+                    }
                 } else{
                     Log.i("TAG", "else: ")
-                    fetchRepoData()
+//                    fetchRepoData()
                 }
 
             } else {
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 ContextCompat.startActivity(context, intent, null)
+                checkLocationPermission(activity,fusedLocationProviderClient)
             }
         } else {
             requestPermissions(activity)
+            checkLocationPermission(activity,fusedLocationProviderClient)
         }
 
     }
@@ -254,7 +261,12 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     private fun getLocalWeatherDate() {
 
         viewModelScope.launch {
-            currentWeatherLiveData.postValue(repository.getLocalWeather())
+            val res = repository.getLocalWeather()
+            if(res != null)
+                currentWeatherLiveData.postValue(res)
+            else if(!isNetworkAvailable(context)){
+                errorLiveData.postValue(true)
+            }
         }
 //        repository.getLocalWeather().observeForever {
 //            if(it != null)

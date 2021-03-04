@@ -80,15 +80,12 @@ dependencies {
     implementation "com.squareup.picasso:picasso:$picasso"
 
     //location
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
 
     //map
     implementation "com.google.android.gms:play-services-maps:$map_version"
 
     implementation 'androidx.multidex:multidex:2.0.1'
-
-
-
 
 
 }
