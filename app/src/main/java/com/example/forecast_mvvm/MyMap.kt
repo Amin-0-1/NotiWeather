@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.forecast_mvvm.screens.favourite.FavouriteViewModel
 import com.example.forecast_mvvm.utilities.SettingsSP
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -37,7 +38,7 @@ class MyMap : AppCompatActivity(), OnMapReadyCallback {
         map.mapType = GoogleMap.MAP_TYPE_NORMAL;
         SettingsSP.loadSettings(applicationContext)
 
-        if(SettingsSP.getLocationSetting() != "GPS" && mPreferences.getString("lat","null") != "null"){
+        if(SettingsSP.getLocationSetting() != "GPS"){
             val lat = mPreferences.getString("lat","null")
             val lon = mPreferences.getString("lon","null")
 
@@ -51,14 +52,14 @@ class MyMap : AppCompatActivity(), OnMapReadyCallback {
             mark = LatLng(it.latitude, it.longitude)
             map.addMarker(MarkerOptions().position(mark!!).title("mark"))
             map.moveCamera(CameraUpdateFactory.newLatLng(mark))
-            saveLocationOnSP()
+
         }
 
     }
 
     private fun saveLocationOnSP() {
         if(state == "fav" && mark != null){
-            val favouriteViewModel = FavouriteViewModel(application)
+            val favouriteViewModel = ViewModelProvider(this,defaultViewModelProviderFactory).get(FavouriteViewModel::class.java)
             favouriteViewModel.saveFavouriteCoord(mark!!.latitude, mark!!.longitude)
 
         }else if(state == "set" && mark != null){
@@ -81,25 +82,8 @@ class MyMap : AppCompatActivity(), OnMapReadyCallback {
     @SuppressLint("CommitPrefEdits")
     override fun onDestroy() {
         super.onDestroy()
+        saveLocationOnSP()
 
-//        if(state == "fav" && mark != null){
-//            val favouriteViewModel = FavouriteViewModel(application)
-//            favouriteViewModel.saveFavouriteCoord(mark!!.latitude, mark!!.longitude)
-//
-//        }else if(state == "set" && mark != null){
-//
-//            val sharedPref = getSharedPreferences("location", Context.MODE_PRIVATE)
-//            val editor: SharedPreferences.Editor = sharedPref.edit()
-//
-//            if(mark != null){
-//                editor.putString("lat",mark?.latitude.toString())
-//                editor.putString("lon",mark?.longitude.toString())
-//                editor.apply()
-//            }
-//
-//        }else{
-//            Log.i("TAG", "onDestroy: no mark")
-//        }
     }
 
 }

@@ -23,6 +23,8 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
     private var locations = MutableLiveData<List<FavouriteCoordination>>()
     private var nullLocations = MutableLiveData<List<FavouriteCoordination>>()
     private var message = MutableLiveData<Boolean>()
+    private var geocoder:Geocoder = Geocoder(application.applicationContext, Locale.getDefault())
+
 
     @SuppressLint("StaticFieldLeak")
     private val context = application.applicationContext
@@ -39,6 +41,7 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun saveFavouriteCoord(latitude: Double, longitude: Double, title:String? = null) {
+
         if(title == null && !isNetworkAvailable()){
             message.postValue(false)
             repository.saveFavouriteCoord(latitude,longitude,title)
@@ -47,6 +50,7 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
         }else{
             repository.saveFavouriteCoord(latitude,longitude,title)
         }
+
     }
 
 
@@ -76,7 +80,6 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
         if(it.isNotEmpty()){
 
             for (i in it){
-//                Log.i("TAG", "updateLocaility: ${i.lat}")
                 val c = getCityName(i.lat,i.lon)
                 saveFavouriteCoord(i.lat,i.lon,c)
             }
@@ -84,13 +87,12 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun getCityName(lat: Double, lon: Double): String {
-        val geocoder = Geocoder(context, Locale.getDefault())
-        val res:String
+
         if (lat != 0.0 && lon != 0.0) {
 
             try {
                 val addresses = geocoder.getFromLocation(lat, lon, 1)
-                res = addresses[0].locality
+                val res = addresses[0].getAddressLine(0)
                 return res
             }catch (e: IOException) {
                 Log.i("TAG", "getCityName: catch")
