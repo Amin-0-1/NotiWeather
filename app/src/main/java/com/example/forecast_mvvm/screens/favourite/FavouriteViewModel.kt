@@ -51,6 +51,7 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
             repository.saveFavouriteCoord(latitude,longitude,title)
         }
 
+        favouriteLocations()
     }
 
 
