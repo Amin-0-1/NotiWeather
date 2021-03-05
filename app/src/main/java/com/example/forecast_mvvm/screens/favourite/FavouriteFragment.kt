@@ -35,6 +35,7 @@ class FavouriteFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        Log.i("TAG", "onResume: favouriteLocations")
         viewModel.favouriteLocations()
     }
 
@@ -47,12 +48,11 @@ class FavouriteFragment : Fragment() {
         prepareFavouriteRecyclerView()
 
         binding.floatingActionButton.setOnClickListener(View.OnClickListener {
-            val intent = Intent(requireContext(),MyMap::class.java)
+            val intent = Intent(requireActivity().applicationContext,MyMap::class.java)
             intent.putExtra("state","fav")
             startActivity(intent)
             // save cooord in db
         })
-
     }
 
     private fun prepareFavouriteRecyclerView(){

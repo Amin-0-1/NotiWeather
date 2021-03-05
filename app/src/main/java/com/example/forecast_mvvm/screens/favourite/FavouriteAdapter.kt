@@ -43,13 +43,13 @@ class FavouriteAdapter(
     }
 
     private fun setOnClickFunctions(holder: MyViewHolder,position: Int) {
-        holder.itemView.setOnClickListener(View.OnClickListener {
+        holder.itemView.setOnClickListener {
             Log.i("TAG", "clicked: ${favouriteList[position]}")
-        })
+        }
 
-        holder.deleteBtn.setOnClickListener(View.OnClickListener {
-            viewModel.deleteFavourite(favouriteList[position].lat,favouriteList[position].lon)
-        })
+        holder.deleteBtn.setOnClickListener {
+            viewModel.deleteFavourite(favouriteList[position].lat, favouriteList[position].lon)
+        }
     }
 
     override fun getItemCount(): Int {
