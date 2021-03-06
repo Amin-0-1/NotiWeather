@@ -98,11 +98,10 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
     fun getCityName(lat: Double, lon: Double): String {
         val geocoder = Geocoder(context, Locale.getDefault())
-        val res:String
         if (lat != 0.0 && lon != 0.0) {
             try {
                 val addresses = geocoder.getFromLocation(lat, lon, 1)
-                res = addresses[0].locality.toString()
+                val res = addresses[0].locality.toString()
 
                 return res;
             } catch (e: IOException) {
@@ -232,42 +231,19 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                 currentWeatherLiveData.postValue(repository.getWeatherData(location.latitude.toString(),location.longitude.toString()))
             }
         }
-//        if(location == null){ // no internet connection
-//            CoroutineScope(Dispatchers.IO).launch {
-//                val deferred = async{ repository.getWeatherData() }
-//
-//                withContext(Dispatchers.Main){
-//                    deferred.await().observeForever {
-//                        currentWeatherLiveData.postValue(it)
-//                    }
-//                }
-//            }
-//        }else{
-//            CoroutineScope(Dispatchers.IO).launch {
-//                val deferred = async{ repository.getWeatherData(
-//                        location.latitude.toString(),
-//                        location.longitude.toString()
-//                ) }
-//
-//                withContext(Dispatchers.Main){
-//                    deferred.await().observeForever {
-//                        currentWeatherLiveData.postValue(it)
-//                    }
-//                }
-//            }
-//        }
+
     }
 
     private fun getLocalWeatherDate() {
 
-        viewModelScope.launch {
+//        viewModelScope.launch {
             val res = repository.getLocalWeather()
             if(res != null)
                 currentWeatherLiveData.postValue(res)
             else if(!isNetworkAvailable(context)){
                 errorLiveData.postValue(true)
             }
-        }
+//        }
 //        repository.getLocalWeather().observeForever {
 //            if(it != null)
 //                currentWeatherLiveData.postValue(it)

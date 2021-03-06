@@ -33,26 +33,32 @@ class FavouriteFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.i("TAG", "onResume: favouriteLocations")
-        viewModel.favouriteLocations()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this).get(FavouriteViewModel::class.java)
+        prepareLogic()
+        prepareFavouriteRecyclerView()
+
+
+
+        binding.floatingActionButton.setOnClickListener {
+            val intent = Intent(requireActivity().applicationContext, MyMap::class.java)
+            intent.putExtra("state", "fav")
+            startActivity(intent)
+            // save cooord in db
+        }
+
+        binding.swipe.setOnRefreshListener {
+            prepareLogic()
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(FavouriteViewModel::class.java)
+
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle= null
 
-        prepareLogic()
-        prepareFavouriteRecyclerView()
-
-        binding.floatingActionButton.setOnClickListener(View.OnClickListener {
-            val intent = Intent(requireActivity().applicationContext,MyMap::class.java)
-            intent.putExtra("state","fav")
-            startActivity(intent)
-            // save cooord in db
-        })
     }
 
     private fun prepareFavouriteRecyclerView(){
@@ -68,22 +74,31 @@ class FavouriteFragment : Fragment() {
         observeViewModel()
 
         viewModel.favouriteLocations()
+        binding.swipe.isRefreshing=false
     }
 
     private fun observeViewModel() {
-//        viewModel.getNullLocations().observe(viewLifecycleOwner, Observer {
-//            viewModel.updateLocaility(it)
-//        })
-        viewModel.getLocations().observe(viewLifecycleOwner, Observer {
-//            viewModel.
-            Log.i("TAG", "observeViewModel: $it")
-            favouriteAdapter.setAdapterData(it)
+        val deleteToast = Toast.makeText(requireContext(),"Deleted Successfully",Toast.LENGTH_SHORT)
+        val willBeToast = Toast.makeText(requireContext(),"Data Will be Available once you're connected to Internet",Toast.LENGTH_SHORT)
+
+        viewModel.getNotNullFavouriteLocation().observe(viewLifecycleOwner, {
+//
+            Log.i("TAG", "observeViewModel: ${it.size}")
+            favouriteAdapter.setAdapterData(it,requireContext())
         })
-        viewModel.getMessage().observe(viewLifecycleOwner, Observer {
-            if(it == true){
-                Toast.makeText(requireContext(),"Deleted Successfully",Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(requireContext(),"Data Will be Available once you're connected to Internet",Toast.LENGTH_SHORT).show()
+        viewModel.getMessage().observe(viewLifecycleOwner, {
+
+//            if (deleteToast.view?.isShown == true)
+//                deleteToast.cancel()
+//
+//            if (willBeToast.view?.isShown == true)
+//                willBeToast.cancel()
+
+            if (it == true) {
+                deleteToast.show()
+            } else {
+                Log.i("TAG", "observeViewModel: will be avail")
+                willBeToast.show()
             }
         })
     }

@@ -19,7 +19,7 @@ interface FavouriteCoordDao {
     fun getNullFavouriteLocations(): List<FavouriteCoordination>
 
     @Query("select * from favCoord where title is not null")
-    fun getNotNullFavourite(): List<FavouriteCoordination>
+    fun getNotNullFavourite(): LiveData<List<FavouriteCoordination>>
 
     @Query("delete from favCoord where lat is :latitude and lon is :longitude ")
     fun deleteFavourite(latitude: Double, longitude: Double)

@@ -1,5 +1,6 @@
 package com.example.forecast_mvvm.dataLayer.remote
 
+import com.example.forecast_mvvm.dataLayer.local.response.FavouriteWeatherResponse
 import com.example.forecast_mvvm.dataLayer.remote.response.WeatherResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -20,4 +21,13 @@ interface OpenWeatherMapAPI {
         @Query("lang") lang:String="en"
 
         ): Response<WeatherResponse>
+
+    @GET("onecall?appid=$API_KEY")
+
+    suspend fun getFavouriteWeatherData(
+        @Query("lat") latitude:String,
+        @Query("lon") longitude:String,
+        @Query("units") unit:String="metric",
+        @Query("lang") lang:String="en"
+    ): Response<FavouriteWeatherResponse>
 }

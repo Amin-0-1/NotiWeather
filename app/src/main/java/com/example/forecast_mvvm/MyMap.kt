@@ -35,7 +35,7 @@ class MyMap : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        map.mapType = GoogleMap.MAP_TYPE_NORMAL;
+        map.mapType = GoogleMap.MAP_TYPE_HYBRID;
         SettingsSP.loadSettings(applicationContext)
 
         if(SettingsSP.getLocationSetting() != "GPS"){
@@ -59,7 +59,7 @@ class MyMap : AppCompatActivity(), OnMapReadyCallback {
 
     private fun saveLocationOnSP() {
         if(state == "fav" && mark != null){
-            val favouriteViewModel = ViewModelProvider(this,defaultViewModelProviderFactory).get(FavouriteViewModel::class.java)
+            val favouriteViewModel = ViewModelProvider(this).get(FavouriteViewModel::class.java)
             favouriteViewModel.saveFavouriteCoord(mark!!.latitude, mark!!.longitude)
 
         }else if(state == "set" && mark != null){

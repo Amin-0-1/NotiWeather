@@ -13,29 +13,31 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.forecast_mvvm.dataLayer.Repository
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
-import kotlinx.coroutines.*
+import com.example.forecast_mvvm.dataLayer.local.response.FavouriteWeatherResponse
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 
 class FavouriteViewModel(application: Application) : AndroidViewModel(application) {
     private var repository: Repository = Repository(application)
 
-    private var locations = MutableLiveData<List<FavouriteCoordination>>()
-    private var nullLocations = MutableLiveData<List<FavouriteCoordination>>()
+//    private var locations = MutableLiveData<List<FavouriteCoordination>>()
+//    private var nullLocations = MutableLiveData<List<FavouriteCoordination>>()
     private var message = MutableLiveData<Boolean>()
+    private var favLocationsData = MutableLiveData<FavouriteWeatherResponse>()
     private var geocoder:Geocoder = Geocoder(application.applicationContext, Locale.getDefault())
 
 
     @SuppressLint("StaticFieldLeak")
     private val context = application.applicationContext
-
-
-    fun getLocations(): LiveData<List<FavouriteCoordination>> {
-        return locations
+//
+//
+    fun getFavLocationData(): LiveData<FavouriteWeatherResponse> {
+        return favLocationsData
     }
-    fun getNullLocations():LiveData<List<FavouriteCoordination>>{
-        return nullLocations
-    }
+//    fun getNullLocations():LiveData<List<FavouriteCoordination>>{
+//        return nullLocations
+//    }
     fun getMessage():LiveData<Boolean>{
         return message
     }
@@ -43,10 +45,12 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
     fun saveFavouriteCoord(latitude: Double, longitude: Double, title:String? = null) {
 
         if(title == null && !isNetworkAvailable()){
+            Log.i("TAG", "saveFavouriteCoord: meessage post false")
             message.postValue(false)
             repository.saveFavouriteCoord(latitude,longitude,title)
         }else if(title == null){ // network exist
             repository.saveFavouriteCoord(latitude,longitude,getCityName(latitude,longitude))
+            getFavouriteItemDetails(FavouriteCoordination(latitude,longitude))
         }else{
             repository.saveFavouriteCoord(latitude,longitude,title)
         }
@@ -65,10 +69,11 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    private fun getNotNullFavouriteLocation() {
-        viewModelScope.launch {
-            locations.postValue(repository.getNotNullFavourite())
-        }
+    fun getNotNullFavouriteLocation():LiveData<List<FavouriteCoordination>> {
+//        viewModelScope.launch {
+//            locations.postValue(repository.getNotNullFavourite())
+//        }
+        return repository.getNotNullFavourite()
     }
 
     private fun isNetworkAvailable(): Boolean {
@@ -83,6 +88,7 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
             for (i in it){
                 val c = getCityName(i.lat,i.lon)
                 saveFavouriteCoord(i.lat,i.lon,c)
+                getFavouriteItemDetails(FavouriteCoordination(i.lat,i.lon))
             }
         }
     }
@@ -107,11 +113,22 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun deleteFavourite(lat: Double, lon: Double) {
-        viewModelScope.launch {
+//        viewModelScope.launch {
             repository.deleteFavourite(lat,lon)
             getNotNullFavouriteLocation()
             message.postValue(true)
+//        }
+    }
+
+    fun getFavouriteItemDetails(favouriteCoordination: FavouriteCoordination) {
+        viewModelScope.launch {
+            Log.i("lat", "getFavouriteItemDetails: lat is ${favouriteCoordination.lat}")
+            repository.getFavWeatherData(favouriteCoordination.lat,favouriteCoordination.lon)
         }
+    }
+    fun getLocalFavouriteItemDetails(lat: Double, lon: Double): FavouriteWeatherResponse {
+        Log.i("track", "getLocalFavouriteItemDetails: ")
+        return repository.getLocalFavouriteWeather(lat,lon)
     }
 
 
