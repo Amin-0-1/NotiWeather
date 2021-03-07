@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.forecast_mvvm.dataLayer.entities.models.WeatherState
+import com.example.forecast_mvvm.dataLayer.local.LocalDataSource
 import com.example.forecast_mvvm.databinding.WeatherFragmentBinding
 import com.google.android.gms.location.*
 import java.text.SimpleDateFormat
@@ -80,34 +81,20 @@ class WeatherFragment : Fragment() {
     private fun observeViewModel() {
 
         viewModel.getCurrentWeatherLiveData().observe(viewLifecycleOwner, Observer {
-
-//            val it = viewModel.checkWeatherStateDateValidation(it)
-//            if (it === null) {
-//                Log.i("time", "observeViewModel: null time stamp")
-//            }else{
-//                hourlyAdapter.setAdapterData(it.hourly)
-//                dailyAdapter.setAdapterData(it.daily)
-//
-//                binding.groupLoading.visibility = View.GONE
-//                binding.screenGroup.visibility = View.VISIBLE
-//                updateLocation(it.timezone)
-//                updateCurrentDate(it.weatherState.dt)
-//                updateTemperature(it.weatherState)
-//                updateWeatherDetails(it.weatherState)
-//            }
+            Log.i("TAG", "observeViewModel: fragment")
 
 
             val currentDateAndTime: String = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Date())
             Log.i("TAG", "observeViewModel: $currentDateAndTime")
 
-            if(it != null){
+            if (it != null) {
 
             }
             hourlyAdapter.setAdapterData(it.hourly)
             dailyAdapter.setAdapterData(it.daily)
 
             updateBlockingUi()
-            updateLocation(it.lat,it.lon)
+            //updateLocation(it.lat, it.lon)
             updateCurrentDate(it.weatherState.dt)
             updateTemperature(it.weatherState)
             updateWeatherDetails(it.weatherState)
@@ -133,7 +120,12 @@ class WeatherFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateWeatherDetails(weatherState: WeatherState) {
-        binding.windTextView.text = "${weatherState.windSpeed} meter/sec"
+        var unit = "meter/sec"
+        if(viewModel.checkUnit())
+            unit = "miles/hour"
+
+
+        binding.windTextView.text = "${weatherState.windSpeed} $unit"
         binding.pressureTextView.text = "${weatherState.pressure} hPa"
         binding.humidityTextView.text = "${weatherState.humidity} %"
         binding.cloudsTextView.text = "${weatherState.clouds} %"
@@ -141,7 +133,7 @@ class WeatherFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateTemperature(state: WeatherState) {
-        binding.textViewTemperature.text = "${state.temp.toInt().toString()}°"
+        binding.textViewTemperature.text = "${state.temp.toInt()}°"
         binding.textViewState.text = state.weather[0].description
     }
 

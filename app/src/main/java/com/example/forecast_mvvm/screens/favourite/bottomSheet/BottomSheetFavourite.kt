@@ -10,6 +10,7 @@ import android.view.WindowManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
 import com.example.forecast_mvvm.databinding.FavWeatherFragmentBinding
 import com.example.forecast_mvvm.screens.favourite.FavouriteViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -66,7 +67,7 @@ class BottomSheetFavourite: BottomSheetDialogFragment() {
         Log.i("track", "onViewCreated: ${lat} lon: $lon")
 
         viewModel = ViewModelProvider(this).get(FavouriteViewModel::class.java)
-//        viewModel.getLocalFavouriteItemDetails(lat,lon)
+        viewModel.getFavouriteItemDetails(FavouriteCoordination(lat,lon))
 
         // preparing the recycler views for the fragment
         val horizontalLayout = LinearLayoutManager(context)
@@ -78,17 +79,24 @@ class BottomSheetFavourite: BottomSheetDialogFragment() {
         binding.hourlyRecycleView.layoutManager = horizontalLayout
         binding.dailyRecyclerView.layoutManager = verticalLayout
 
-        hourlyAdapter = FavBsHourlyAdapter(mutableListOf(), viewModel)
-//        dailyAdapter = FavBsDailyAdapter(mutableListOf(), viewModel)
+        hourlyAdapter = FavBsHourlyAdapter(mutableListOf(),viewModel)
+        dailyAdapter = FavBsDailyAdapter(mutableListOf(),viewModel)
 
         binding.hourlyRecycleView.adapter = hourlyAdapter
-//        binding.dailyRecyclerView.adapter = dailyAdapter
+        binding.dailyRecyclerView.adapter = dailyAdapter
 
-//        viewModel.getLocalFavouriteItemDetails(lat,lon).observe(viewLifecycleOwner, Observer {
-//            Log.i("TAG", "onViewCreated: bottomsheet${it}")
-//            hourlyAdapter.setAdapterData(it.hourly)
-//        })
+        viewModel.getLocalFavouriteItemDetails(lat,lon).observe(viewLifecycleOwner,
+            Observer {
+                hourlyAdapter.setAdapterData(it.hourly)
+                dailyAdapter.setAdapterData(it.daily)
+
+                binding.textViewTemperature.text = it.weatherState.temp.toString()
+                binding.cloudsTextView.text = it.weatherState.clouds.toString()
+                binding.humidityTextView.text = it.weatherState.humidity.toString()
+                binding.pressureTextView.text = it.weatherState.pressure.toString()
+                binding.windTextView.text = it.weatherState.windSpeed.toString()
+                binding.textViewState.text = it.weatherState.weather[0].description
+            })
+
     }
-
-
 }

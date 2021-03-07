@@ -1,8 +1,8 @@
 package com.example.forecast_mvvm.screens.favourite
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,13 +51,18 @@ class FavouriteAdapter(
     private fun setOnClickFunctions(holder: MyViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
 
-//            val bottomSheetDialogFragment = BottomSheetFavourite()
-//            val bundle = Bundle()
-//            Log.i("track", "setOnClickFunctions: ${favouriteList[position].lat} lon: ${favouriteList[position].lon}")
-//            bundle.putDouble("lat", favouriteList[position].lat)
-//            bundle.putDouble("lon", favouriteList[position].lon)
-//            bottomSheetDialogFragment.arguments = bundle
-//            bottomSheetDialogFragment.show((context as FragmentActivity).supportFragmentManager,"bottomUpSheet")
+            val bottomSheetDialogFragment = BottomSheetFavourite()
+            val bundle = Bundle()
+            bundle.putDouble("lat", favouriteList[position].lat)
+            bundle.putDouble("lon", favouriteList[position].lon)
+            bottomSheetDialogFragment.arguments = bundle
+            bottomSheetDialogFragment.show((context as FragmentActivity).supportFragmentManager,"bottomUpSheet")
+//            val intent = Intent(context,Details::class.java)
+//            intent.putExtra("lat",favouriteList[position].lat)
+//            intent.putExtra("lon",favouriteList[position].lon)
+//
+//            context.startActivity(intent)
+
 
         }
 

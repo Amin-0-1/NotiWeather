@@ -56,10 +56,10 @@ class LocalDataSource(application:Application) {
     }
 
     fun getFavouriteWeatherData(lat: Double, lon: Double): FavouriteWeatherResponse {
-        return favouriteWeatherDao.getFavWeatherData(lat,lon)
+        return favouriteWeatherDao.getFavWeatherDataResponse(lat,lon)
     }
 
-    fun getLocalFavouriteWeather(lat: Double, lon: Double): FavouriteWeatherResponse {
+    fun getLocalFavouriteWeather(lat: Double, lon: Double): LiveData<FavouriteWeatherResponse> {
         return favouriteWeatherDao.getFavWeatherData(lat,lon)
     }
 

@@ -21,6 +21,8 @@ class Repository(private val application: Application) {
             val data = remoteDataSource.getCurrentWeatherData(lat,lon) // api call
             Log.i("TAG", "getWeatherData: inside api")
             if(data.isSuccessful){
+//                data.body()?.lat = lat.toDouble()
+//                data.body()?.lon = lon.toDouble()
                 localDataSource.insertWeatherData(data.body()!!) // insert in room db
             }
         }
@@ -33,6 +35,7 @@ class Repository(private val application: Application) {
 
 
      fun saveFavouriteCoord(latitude: Double, longitude: Double, title: String?) {
+         Log.i("TAG", "saveFavouriteCoord: on saving : $latitude")
         localDataSource.insertFavouriteCoord(latitude,longitude,title)
     }
 
@@ -54,6 +57,7 @@ class Repository(private val application: Application) {
     }
 
     fun deleteFavourite(lat: Double, lon: Double) {
+        Log.i("TAG", "deleteFavourite: $lat")
         localDataSource.deleteFavourite(lat,lon)
         localDataSource.deleteFavouriteWeather(lat,lon)
     }
@@ -67,6 +71,8 @@ class Repository(private val application: Application) {
             Log.i("TAG", "getfavWeatherData: inside api")
             if(data.isSuccessful){
                 Log.i("TAG", "getFavWeatherData: onscucess ${data.body()}")
+                data.body()?.lat = lat
+                data.body()?.lon = lon
                 localDataSource.insertfavouriteWeatherData(data.body()!!) // insert in room db
             }
         }
@@ -74,7 +80,7 @@ class Repository(private val application: Application) {
         return localDataSource.getFavouriteWeatherData(lat,lon)
     }
 
-    fun getLocalFavouriteWeather(lat: Double, lon: Double): FavouriteWeatherResponse {
+    fun getLocalFavouriteWeather(lat: Double, lon: Double): LiveData<FavouriteWeatherResponse> {
         return localDataSource.getLocalFavouriteWeather(lat,lon)
     }
 
