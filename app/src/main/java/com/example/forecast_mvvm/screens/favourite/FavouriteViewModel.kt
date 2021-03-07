@@ -14,11 +14,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.forecast_mvvm.dataLayer.Repository
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteWeatherResponse
+import com.example.forecast_mvvm.utilities.IExactDay
+import com.example.forecast_mvvm.utilities.IExactTime
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 
-class FavouriteViewModel(application: Application) : AndroidViewModel(application) {
+class FavouriteViewModel(application: Application) : AndroidViewModel(application) ,IExactDay,IExactTime{
     private var repository: Repository = Repository(application)
 
 //    private var locations = MutableLiveData<List<FavouriteCoordination>>()
@@ -126,7 +128,7 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
             repository.getFavWeatherData(favouriteCoordination.lat,favouriteCoordination.lon)
         }
     }
-    fun getLocalFavouriteItemDetails(lat: Double, lon: Double): FavouriteWeatherResponse {
+    fun getLocalFavouriteItemDetails(lat: Double, lon: Double): LiveData<FavouriteWeatherResponse> {
         Log.i("track", "getLocalFavouriteItemDetails: ")
         return repository.getLocalFavouriteWeather(lat,lon)
     }

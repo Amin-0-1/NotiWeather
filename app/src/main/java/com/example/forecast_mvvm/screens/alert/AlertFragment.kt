@@ -8,9 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.example.forecast_mvvm.R
+import com.example.forecast_mvvm.databinding.AlertFragmentBinding
+import java.util.zip.Inflater
 
 class AlertFragment : Fragment() {
 
+    lateinit var binding:AlertFragmentBinding
     companion object {
         fun newInstance() = AlertFragment()
     }
@@ -21,9 +24,19 @@ class AlertFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.alert_fragment, container, false)
+        binding = AlertFragmentBinding.inflate(inflater)
+        return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.floatingActionButton.setOnClickListener{
+            var dialog = Dialogx()
+            dialog.show(childFragmentManager,"dialog")
+        }
+
+    }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)

@@ -25,6 +25,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.forecast_mvvm.dataLayer.Repository
 import com.example.forecast_mvvm.dataLayer.remote.response.WeatherResponse
+import com.example.forecast_mvvm.utilities.IExactDay
+import com.example.forecast_mvvm.utilities.IExactTime
 import com.example.forecast_mvvm.utilities.SettingsSP
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -37,12 +39,14 @@ import java.util.*
 
 
 @Suppress("DEPRECATION", "SENSELESS_COMPARISON")
-class WeatherViewModel(application: Application) : AndroidViewModel(application) {
+class WeatherViewModel(application: Application) : AndroidViewModel(application),IExactDay ,IExactTime{
 
     private var repository:Repository = Repository(application)
     @SuppressLint("StaticFieldLeak")
     private val context = application.applicationContext
     private val loadingLiveData = MutableLiveData<Boolean>()
+    private var geocoder:Geocoder = Geocoder(application.applicationContext, Locale.getDefault())
+
 
 //    val getloading:LiveData<Boolean>get() = loadingLiveData // wesam
 
@@ -75,21 +79,21 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     }
 
 
-    @SuppressLint("SimpleDateFormat")
-    fun extractTime(dt: Long): String {
-        val transformedDate = SimpleDateFormat("hh a").format(Date(dt * 1000))
+//    @SuppressLint("SimpleDateFormat")
+//    fun extractTime(dt: Long): String {
+//        val transformedDate = SimpleDateFormat("hh a").format(Date(dt * 1000))
+//
+//        if(transformedDate[0] == '0') {
+//            return transformedDate.substring(1)
+//        }
+//
+//        return transformedDate
+//    }
 
-        if(transformedDate[0] == '0') {
-            return transformedDate.substring(1)
-        }
-
-        return transformedDate
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    fun exactDay(dt: Long): String {
-        return SimpleDateFormat("EEEE").format(Date(dt * 1000))
-    }
+//    @SuppressLint("SimpleDateFormat")
+//    fun exactDay(dt: Long): String {
+//        return SimpleDateFormat("EEEE").format(Date(dt * 1000))
+//    }
 
     @SuppressLint("SimpleDateFormat")
     fun getCurrentDate(dt: Long) :String{
@@ -97,11 +101,12 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun getCityName(lat: Double, lon: Double): String {
-        val geocoder = Geocoder(context, Locale.getDefault())
+//        val geocoder = Geocoder(context, Locale.getDefault())
         if (lat != 0.0 && lon != 0.0) {
             try {
+                Log.i("TAG", "latolon: lat: $lat , lon: $lon")
                 val addresses = geocoder.getFromLocation(lat, lon, 1)
-                val res = addresses[0].locality.toString()
+                val res = addresses[0].locality
 
                 return res;
             } catch (e: IOException) {
@@ -170,6 +175,12 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         return mPreferences.getString("lat", null) != null && SettingsSP.getLocationSetting() != "GPS"
     }
 
+    fun checkUnit():Boolean{
+        Log.i("TAG", "checkUnit: ${SettingsSP.getUnitSetting()}")
+
+        return SettingsSP.getUnitSetting().equals("Imperial")
+    }
+
     private fun isNetworkAvailable(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
@@ -236,14 +247,14 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
     private fun getLocalWeatherDate() {
 
-//        viewModelScope.launch {
+        viewModelScope.launch {
             val res = repository.getLocalWeather()
             if(res != null)
                 currentWeatherLiveData.postValue(res)
             else if(!isNetworkAvailable(context)){
                 errorLiveData.postValue(true)
             }
-//        }
+        }
 //        repository.getLocalWeather().observeForever {
 //            if(it != null)
 //                currentWeatherLiveData.postValue(it)

@@ -9,12 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.dataLayer.entities.models.WeatherState
 import com.example.forecast_mvvm.screens.favourite.FavouriteViewModel
-import com.example.forecast_mvvm.screens.home.HourlyAdapter
 import com.squareup.picasso.Picasso
 
 class FavBsHourlyAdapter(
     private var hourlyList: MutableList<WeatherState>,
-    private var viewModel: FavouriteViewModel
+    private var viewModel: FavouriteViewModel,
 ): RecyclerView.Adapter<FavBsHourlyAdapter.MyViewHolder>(){
 
 
@@ -47,9 +46,9 @@ class FavBsHourlyAdapter(
 
         Picasso.get().load(urlImage).into(holder.image)
 
-//        val hour = viewModel.extractTime(item.dt)
-//
-//        holder.time.text = if (position == 0) "Now" else hour
+        val hour = viewModel.extractTime(item.dt)
+
+        holder.time.text = if (position == 0) "Now" else hour
 
         holder.temp.text = item.temp.toInt().toString()
     }

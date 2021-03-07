@@ -36,4 +36,12 @@
         <item>ar</item>
     </string-array>
 
+
+    <string-array name="alert_repeating">
+        <item>rain</item>
+        <item>wind</item>
+        <item>fog</item>
+        <item>snow</item>
+    </string-array>
+
 </resources>

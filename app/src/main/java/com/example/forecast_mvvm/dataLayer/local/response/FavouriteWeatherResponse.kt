@@ -23,8 +23,8 @@ class FavouriteWeatherResponse (
 
     val alerts: List<Alert>? = listOf(),
 
-    val lat: Double,
-    val lon: Double,
+    var lat: Double,
+    var lon: Double,
     val timezone: String,
     @SerializedName("timezone_offset")
     val timezoneOffset: Int
