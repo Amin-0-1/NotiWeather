@@ -102,21 +102,24 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
     fun getCityName(lat: Double, lon: Double): String {
 //        val geocoder = Geocoder(context, Locale.getDefault())
+        var res = "null"
         if (lat != 0.0 && lon != 0.0) {
+
             try {
                 Log.i("TAG", "latolon: lat: $lat , lon: $lon")
                 val addresses = geocoder.getFromLocation(lat, lon, 1)
-                val res = addresses[0].locality
+                res = addresses[0].subAdminArea
 
                 return res;
             } catch (e: IOException) {
                 Log.i("TAG", "getCityName: catch")
                 e.printStackTrace()
+                return res
             }
-            return "null"
+            return res
         }else{
             Log.i("TAG", "getCityName: null")
-            return "null"
+            return res
         }
     }
     fun checkWeatherStateDateValidation(weatherResponse: WeatherResponse): WeatherResponse? {

@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/textViewTime"
-        style="@style/hourly_sheet"
+        style="@style/hourly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -24,7 +24,7 @@
 
     <TextView
         android:id="@+id/textViewTemp"
-        style="@style/hourly_sheet"
+        style="@style/hourly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
