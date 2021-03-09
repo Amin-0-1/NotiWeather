@@ -1,5 +1,6 @@
 package com.example.forecast_mvvm.screens.home
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.dataLayer.entities.models.WeatherState
 import com.squareup.picasso.Picasso
+import java.security.PrivateKey
 
 class HourlyAdapter(
     private var hourlyList: MutableList<WeatherState>,
-    private var viewModel: WeatherViewModel
+    private var viewModel: WeatherViewModel,
+    private var context:Context
 ) : RecyclerView.Adapter<HourlyAdapter.MyViewHolder>(){
 
     fun setAdapterData(models: List<WeatherState>) {
@@ -37,9 +40,10 @@ class HourlyAdapter(
         //todo:: get the exact time like 12am .. 1pm .....
         val item = hourlyList[position]
 
-        val urlImage = "http://openweathermap.org/img/wn/${hourlyList.get(position).weather[0].icon}@2x.png"
-
-        Picasso.get().load(urlImage).into(holder.image)
+        if(viewModel.isNetworkAvailable(context)){
+            val urlImage = "http://openweathermap.org/img/wn/${hourlyList.get(position).weather[0].icon}@2x.png"
+            Picasso.get().load(urlImage).into(holder.image)
+        }
 
         val hour = viewModel.extractTime(item.dt)
 

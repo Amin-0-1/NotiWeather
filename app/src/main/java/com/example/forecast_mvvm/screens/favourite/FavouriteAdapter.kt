@@ -13,21 +13,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
 import com.example.forecast_mvvm.screens.favourite.bottomSheet.BottomSheetFavourite
+import java.security.PrivateKey
 
 
 class FavouriteAdapter(
     private var favouriteList: MutableList<FavouriteCoordination>,
-    private var viewModel: FavouriteViewModel
+    private var viewModel: FavouriteViewModel,
+    private var context: Context
 ): RecyclerView.Adapter<FavouriteAdapter.MyViewHolder>() {
 
-    private lateinit var context:Context
-
-    fun setAdapterData(favourite: List<FavouriteCoordination>,context: Context) {
+    fun setAdapterData(favourite: List<FavouriteCoordination>) {
         favouriteList.clear()
         favouriteList.addAll(favourite)
         notifyDataSetChanged()
 
-        this.context = context
     }
 
     class MyViewHolder(view: View): RecyclerView.ViewHolder(view)  {
@@ -57,13 +56,6 @@ class FavouriteAdapter(
             bundle.putDouble("lon", favouriteList[position].lon)
             bottomSheetDialogFragment.arguments = bundle
             bottomSheetDialogFragment.show((context as FragmentActivity).supportFragmentManager,"bottomUpSheet")
-//            val intent = Intent(context,Details::class.java)
-//            intent.putExtra("lat",favouriteList[position].lat)
-//            intent.putExtra("lon",favouriteList[position].lon)
-//
-//            context.startActivity(intent)
-
-
         }
 
         holder.deleteBtn.setOnClickListener {

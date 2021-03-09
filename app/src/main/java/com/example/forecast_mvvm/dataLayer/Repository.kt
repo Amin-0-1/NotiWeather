@@ -22,14 +22,9 @@ class Repository(private val application: Application) {
             val data = remoteDataSource.getCurrentWeatherData(lat,lon) // api call
             Log.i("TAG", "getWeatherData: inside api")
             if(data.isSuccessful){
-//                data.body()?.lat = lat.toDouble()
-//                data.body()?.lon = lon.toDouble()
                 localDataSource.insertWeatherData(data.body()!!) // insert in room db
             }
         }
-
-        // get fav
-//        getnot
         return localDataSource.getWeatherData()
     }
 
@@ -53,9 +48,6 @@ class Repository(private val application: Application) {
         return localDataSource.getNotNullFavourite()
     }
 
-    fun getAllFavourite(): List<FavouriteCoordination> {
-        return localDataSource.getAllFavouriteCoord()
-    }
 
     fun deleteFavourite(lat: Double, lon: Double) {
         Log.i("TAG", "deleteFavourite: $lat")
@@ -64,19 +56,22 @@ class Repository(private val application: Application) {
     }
 
 
-    suspend fun getFavWeatherData(lat: Double=0.0 , lon: Double=0.0): FavouriteWeatherResponse {
+    suspend fun getFavWeatherData(lat: Double=0.0 , lon: Double=0.0,state:Boolean): FavouriteWeatherResponse {
 
-        // get current
-        if(lat != 0.0 && lon != 0.0){
-            val data = remoteDataSource.getFavouriteWeatherData(lat.toString(),lon.toString()) // api call
-            Log.i("TAG", "getfavWeatherData: inside api")
-            if(data.isSuccessful){
-                Log.i("TAG", "getFavWeatherData: onscucess ${data.body()}")
-                data.body()?.lat = lat
-                data.body()?.lon = lon
-                localDataSource.insertfavouriteWeatherData(data.body()!!) // insert in room db
+        if(state){
+            // get current
+            if(lat != 0.0 && lon != 0.0){
+                val data = remoteDataSource.getFavouriteWeatherData(lat.toString(),lon.toString()) // api call
+                Log.i("TAG", "getfavWeatherData: inside api")
+                if(data.isSuccessful){
+                    Log.i("TAG", "getFavWeatherData: onscucess ${data.body()}")
+                    data.body()?.lat = lat
+                    data.body()?.lon = lon
+                    localDataSource.insertfavouriteWeatherData(data.body()!!) // insert in room db
+                }
             }
         }
+
 
         return localDataSource.getFavouriteWeatherData(lat,lon)
     }
@@ -85,6 +80,8 @@ class Repository(private val application: Application) {
         return localDataSource.getLocalFavouriteWeather(lat,lon)
     }
 
+
+
     fun getWeatherAlertStatus(lat: Double, lng: Double, type: String): Boolean {
         var key = false
 
@@ -92,8 +89,7 @@ class Repository(private val application: Application) {
         runBlocking {
             var local = localDataSource.getWeatherData()
 
-            val data =
-                remoteDataSource.getCurrentWeatherData(lat.toString(), lng.toString()) // api call
+            val data = remoteDataSource.getCurrentWeatherData(lat.toString(), lng.toString()) // api call
             Log.i("TAG", "getWeatherData: inside api")
             if (data.isSuccessful) {
                 local = data.body()!!

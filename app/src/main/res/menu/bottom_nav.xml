@@ -3,19 +3,19 @@
     <item
         android:id="@+id/weatherFragment"
         android:icon="@drawable/ic_home"
-        android:title="Home"/>
+        android:title="@string/home" />
     <item
         android:id="@+id/favouriteFragment"
         android:icon="@drawable/ic_favourite"
-        android:title="Favourite"/>
+        android:title="@string/favourite" />
 
     <item
         android:id="@+id/alertFragment"
         android:icon="@drawable/ic_alert"
-        android:title="Alert"/>
+        android:title="@string/alarms" />
 
     <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
-        android:title="Settings"/>
+        android:title="@string/settings" />
 </menu>

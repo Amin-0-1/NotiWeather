@@ -31,6 +31,7 @@
 
         <activity
             android:name=".MyMap"
+            android:hardwareAccelerated="false"
             android:label="@string/title_activity_my_map" />
 
         <activity android:name=".screens.MainActivity">

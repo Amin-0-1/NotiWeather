@@ -1,5 +1,6 @@
 package com.example.forecast_mvvm.screens.home
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,8 @@ import com.squareup.picasso.Picasso
 
 class DailyAdapter(
     private var dailyList: MutableList<Daily>,
-    private var viewModel: WeatherViewModel
+    private var viewModel: WeatherViewModel,
+    private var context:Context
 ): RecyclerView.Adapter<DailyAdapter.MyViewHolder>() {
 
     fun setAdapterData(daily: List<Daily>) {
@@ -43,8 +45,10 @@ class DailyAdapter(
         holder.maxTemp.text = item.temp.max.toString()
         holder.minTemp.text = item.temp.min.toString()
 
-        val urlImage = "http://openweathermap.org/img/wn/${dailyList.get(position).weather[0].icon}@2x.png"
-        Picasso.get().load(urlImage).into(holder.stateImage)
+       if(viewModel.isNetworkAvailable(context)){
+           val urlImage = "http://openweathermap.org/img/wn/${dailyList.get(position).weather[0].icon}@2x.png"
+           Picasso.get().load(urlImage).into(holder.stateImage)
+       }
 
     }
 

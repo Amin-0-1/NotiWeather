@@ -55,6 +55,7 @@
         android:id="@+id/screenGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:constraint_referenced_ids="hourlyRecycleView,textView_temperature,textView_state,scrollView,horizontalLine" />
 
     <TextView
