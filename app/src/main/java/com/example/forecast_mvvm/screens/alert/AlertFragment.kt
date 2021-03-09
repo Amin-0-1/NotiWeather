@@ -32,7 +32,7 @@ class AlertFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.floatingActionButton.setOnClickListener{
-            var dialog = Dialogx()
+            val dialog = Dialogx()
             dialog.show(childFragmentManager,"dialog")
         }
 

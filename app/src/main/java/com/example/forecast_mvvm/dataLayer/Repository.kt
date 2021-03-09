@@ -7,6 +7,7 @@ import com.example.forecast_mvvm.dataLayer.local.LocalDataSource
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteWeatherResponse
 import com.example.forecast_mvvm.dataLayer.remote.RemoteDataSource
+import kotlinx.coroutines.runBlocking
 
 class Repository(private val application: Application) {
 
@@ -82,6 +83,29 @@ class Repository(private val application: Application) {
 
     fun getLocalFavouriteWeather(lat: Double, lon: Double): LiveData<FavouriteWeatherResponse> {
         return localDataSource.getLocalFavouriteWeather(lat,lon)
+    }
+
+    fun getWeatherAlertStatus(lat: Double, lng: Double, type: String): Boolean {
+        var key = false
+
+
+        runBlocking {
+            var local = localDataSource.getWeatherData()
+
+            val data =
+                remoteDataSource.getCurrentWeatherData(lat.toString(), lng.toString()) // api call
+            Log.i("TAG", "getWeatherData: inside api")
+            if (data.isSuccessful) {
+                local = data.body()!!
+
+                localDataSource.insertWeatherData(local) // insert in room db
+                if (local.weatherState.weather[0].main.toUpperCase() == type.toUpperCase()) {
+                    key = true
+                }
+
+            }
+        }
+        return key
     }
 
 

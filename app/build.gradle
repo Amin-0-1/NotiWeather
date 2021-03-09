@@ -88,6 +88,9 @@ dependencies {
     //gif
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
 
+    // work manager
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
     implementation 'androidx.multidex:multidex:2.0.1'
 
 

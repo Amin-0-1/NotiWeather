@@ -39,7 +39,7 @@
 
     <string-array name="alert_repeating">
         <item>rain</item>
-        <item>wind</item>
+        <item>thunderstorm</item>
         <item>fog</item>
         <item>snow</item>
     </string-array>

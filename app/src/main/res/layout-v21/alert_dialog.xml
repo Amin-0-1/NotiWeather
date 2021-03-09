@@ -69,7 +69,7 @@
         android:id="@+id/button2"
         android:layout_width="95dp"
         android:layout_height="39dp"
-        android:text="ss"
+        android:text="@string/set"
         app:layout_constraintBottom_toBottomOf="@+id/repeating_spinner"
         app:layout_constraintStart_toStartOf="@+id/time_btn" />
 
