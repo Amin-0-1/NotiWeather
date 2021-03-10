@@ -44,8 +44,10 @@ class FavBsDailyAdapter(
         holder.maxTemp.text = item.temp.max.toString()
         holder.minTemp.text = item.temp.min.toString()
 
-        val urlImage = "http://openweathermap.org/img/wn/${dailyList.get(position).weather[0].icon}@2x.png"
-        Picasso.get().load(urlImage).into(holder.stateImage)
+        if(viewModel.isNetworkAvailable()){
+            val urlImage = "http://openweathermap.org/img/wn/${dailyList.get(position).weather[0].icon}@2x.png"
+            Picasso.get().load(urlImage).into(holder.stateImage)
+        }
     }
 
     override fun getItemCount(): Int {

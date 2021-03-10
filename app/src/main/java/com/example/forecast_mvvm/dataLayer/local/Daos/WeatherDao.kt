@@ -1,10 +1,7 @@
 package com.example.forecast_mvvm.dataLayer.local.Daos
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.forecast_mvvm.dataLayer.remote.response.WeatherResponse
 
 @Dao
@@ -15,4 +12,13 @@ interface WeatherDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(weatherState: WeatherResponse)
+
+    @Query("UPDATE weather SET locality=:cityName")
+    fun updateLocality(cityName: String)
+
+//    @Query("SELECT lat FROM weather")
+//    fun getCurrentLat(): String?
+//
+//    @Query("SELECT lon FROM weather")
+//    fun getCurrentLon(): String?
 }

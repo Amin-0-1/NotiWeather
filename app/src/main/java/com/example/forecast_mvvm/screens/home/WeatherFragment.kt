@@ -12,12 +12,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.dataLayer.entities.models.WeatherState
 import com.example.forecast_mvvm.dataLayer.local.LocalDataSource
 import com.example.forecast_mvvm.databinding.WeatherFragmentBinding
 import com.google.android.gms.location.*
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class WeatherFragment : Fragment() {
 
@@ -32,19 +34,18 @@ class WeatherFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         binding = WeatherFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding.screenGroup.visibility = View.GONE
+        viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 //        viewModel.locationPermission(requireActivity(),fusedLocationClient)
@@ -61,8 +62,8 @@ class WeatherFragment : Fragment() {
         binding.hourlyRecycleView.layoutManager = horizontalLayout
         binding.dailyRecyclerView.layoutManager = verticalLayout
 
-        hourlyAdapter = HourlyAdapter(mutableListOf(), viewModel)
-        dailyAdapter = DailyAdapter(mutableListOf(), viewModel)
+        hourlyAdapter = HourlyAdapter(mutableListOf(), viewModel,requireContext())
+        dailyAdapter = DailyAdapter(mutableListOf(), viewModel, requireContext())
 
         binding.hourlyRecycleView.adapter = hourlyAdapter
         binding.dailyRecyclerView.adapter = dailyAdapter
@@ -81,20 +82,19 @@ class WeatherFragment : Fragment() {
     private fun observeViewModel() {
 
         viewModel.getCurrentWeatherLiveData().observe(viewLifecycleOwner, Observer {
+
             Log.i("TAG", "observeViewModel: fragment")
 
 
             val currentDateAndTime: String = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Date())
             Log.i("TAG", "observeViewModel: $currentDateAndTime")
 
-            if (it != null) {
-
-            }
             hourlyAdapter.setAdapterData(it.hourly)
             dailyAdapter.setAdapterData(it.daily)
 
             updateBlockingUi()
             //updateLocation(it.lat, it.lon)
+            updateLocation(it.locality)
             updateCurrentDate(it.weatherState.dt)
             updateTemperature(it.weatherState)
             updateWeatherDetails(it.weatherState)
@@ -103,7 +103,7 @@ class WeatherFragment : Fragment() {
         })
 
         viewModel.getErrorState().observe(viewLifecycleOwner, Observer {
-            Toast.makeText(context,"no Internet Connection !!",Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "no Internet Connection !!", Toast.LENGTH_SHORT).show()
             updateBlockingUi()
 
         })
@@ -142,15 +142,18 @@ class WeatherFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle = viewModel.getCurrentDate(dt)
     }
 
-    private fun updateLocation(lat: Double, lon: Double) {
-        val value = viewModel.getCityName(lat,lon)
+    private fun updateLocation(locality: String?) {
+//        val value = viewModel.getCityName(lat, lon)
 
-        if(value != "null"){
-            (activity as? AppCompatActivity)?.supportActionBar?.title = value
+        Log.i("TAG", "updateLocation lllllllllllllllllllllllll: $locality")
+        if(locality != "null"){
+            (activity as? AppCompatActivity)?.supportActionBar?.title = locality
         }else{
-            (activity as? AppCompatActivity)?.supportActionBar?.title = "Loading"
+            (activity as? AppCompatActivity)?.supportActionBar?.title = resources.getString(R.string.loading)
+
         }
 //        val string:String = timezone.substring(timezone.indexOf("/", 0, true) + 1)
 
     }
+
 }

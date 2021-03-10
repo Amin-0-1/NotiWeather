@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -31,6 +32,7 @@
 
         <activity
             android:name=".MyMap"
+            android:hardwareAccelerated="false"
             android:label="@string/title_activity_my_map" />
 
         <activity android:name=".screens.MainActivity">

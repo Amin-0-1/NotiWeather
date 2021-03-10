@@ -25,6 +25,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.forecast_mvvm.dataLayer.Repository
 import com.example.forecast_mvvm.dataLayer.remote.response.WeatherResponse
+import com.example.forecast_mvvm.utilities.IExactDate
 import com.example.forecast_mvvm.utilities.IExactDay
 import com.example.forecast_mvvm.utilities.IExactTime
 import com.example.forecast_mvvm.utilities.SettingsSP
@@ -39,7 +40,8 @@ import java.util.*
 
 
 @Suppress("DEPRECATION", "SENSELESS_COMPARISON")
-class WeatherViewModel(application: Application) : AndroidViewModel(application),IExactDay ,IExactTime{
+
+class WeatherViewModel(application: Application) : AndroidViewModel(application),IExactDay ,IExactTime, IExactDate{
 
     private var repository:Repository = Repository(application)
     @SuppressLint("StaticFieldLeak")
@@ -77,60 +79,6 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     fun getCurrentWeatherLiveData(): LiveData<WeatherResponse> {
         return currentWeatherLiveData
     }
-
-
-//    @SuppressLint("SimpleDateFormat")
-//    fun extractTime(dt: Long): String {
-//        val transformedDate = SimpleDateFormat("hh a").format(Date(dt * 1000))
-//
-//        if(transformedDate[0] == '0') {
-//            return transformedDate.substring(1)
-//        }
-//
-//        return transformedDate
-//    }
-
-//    @SuppressLint("SimpleDateFormat")
-//    fun exactDay(dt: Long): String {
-//        return SimpleDateFormat("EEEE").format(Date(dt * 1000))
-//    }
-
-    @SuppressLint("SimpleDateFormat")
-    fun getCurrentDate(dt: Long) :String{
-        return SimpleDateFormat("dd MMM yyyy").format(Date(dt * 1000))
-    }
-
-    fun getCityName(lat: Double, lon: Double): String {
-//        val geocoder = Geocoder(context, Locale.getDefault())
-        if (lat != 0.0 && lon != 0.0) {
-            try {
-                Log.i("TAG", "latolon: lat: $lat , lon: $lon")
-                val addresses = geocoder.getFromLocation(lat, lon, 1)
-                val res = addresses[0].featureName
-
-                return res;
-            } catch (e: IOException) {
-                Log.i("TAG", "getCityName: catch")
-                e.printStackTrace()
-            }
-            return "null"
-        }else{
-            Log.i("TAG", "getCityName: null")
-            return "null"
-        }
-    }
-    fun checkWeatherStateDateValidation(weatherResponse: WeatherResponse): WeatherResponse? {
-        val current = Calendar.getInstance().timeInMillis
-        val timeStamp = weatherResponse.weatherState.dt
-        return if(current+ 60*60*1000  <= timeStamp)
-            weatherResponse
-        else{
-            null
-        }
-    }
-
-
-
 
 
     //Location methods
@@ -181,7 +129,8 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         return SettingsSP.getUnitSetting().equals("Imperial")
     }
 
-    private fun isNetworkAvailable(context: Context): Boolean {
+
+    fun isNetworkAvailable(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
         return activeNetwork?.isConnectedOrConnecting == true
@@ -237,12 +186,12 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             viewModelScope.launch {
                 currentWeatherLiveData.postValue(repository.getWeatherData())
             }
+
         }else{ // set location in settings is enabled
             viewModelScope.launch {
                 currentWeatherLiveData.postValue(repository.getWeatherData(location.latitude.toString(),location.longitude.toString()))
             }
         }
-
     }
 
     private fun getLocalWeatherDate() {

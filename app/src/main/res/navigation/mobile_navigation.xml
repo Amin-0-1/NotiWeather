@@ -8,13 +8,13 @@
     <fragment
         android:id="@+id/alertFragment"
         android:name="com.example.forecast_mvvm.screens.alert.AlertFragment"
-        android:label="Alert"
+        android:label="@string/alarms"
         tools:layout="@layout/alert_fragment" />
 
     <fragment
         android:id="@+id/favouriteFragment"
         android:name="com.example.forecast_mvvm.screens.favourite.FavouriteFragment"
-        android:label="Favourite"
+        android:label="@string/favourite"
         tools:layout="@layout/favourite_fragment" />
     <fragment
         android:id="@+id/weatherFragment"
@@ -24,5 +24,5 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.forecast_mvvm.screens.settings.SettingsFragment"
-        android:label="settings" />
+        android:label="@string/settings" />
 </navigation>

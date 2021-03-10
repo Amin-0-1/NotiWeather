@@ -42,9 +42,10 @@ class FavBsHourlyAdapter(
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = hourlyList[position]
 
-        val urlImage = "http://openweathermap.org/img/wn/${hourlyList.get(position).weather[0].icon}@2x.png"
-
-        Picasso.get().load(urlImage).into(holder.image)
+        if(viewModel.isNetworkAvailable()){
+            val urlImage = "http://openweathermap.org/img/wn/${hourlyList.get(position).weather[0].icon}@2x.png"
+            Picasso.get().load(urlImage).into(holder.image)
+        }
 
         val hour = viewModel.extractTime(item.dt)
 

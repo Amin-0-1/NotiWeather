@@ -14,6 +14,10 @@
     <string name="pressure">Pressure</string>
     <string name="clouds">Clouds</string>
     <string name="windSpead">Wind Spead</string>
+    <string name="home">Home</string>
+    <string name="favourite">Favourite</string>
+    <string name="alarms">Alarms</string>
+    <string name="settings">Settings</string>
 
     <!-- Preference Titles -->
     <string name="location_header">Location</string>
@@ -35,4 +39,11 @@
     <string name="imgDesc">delete Image</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="set">set</string>
+
+
+    <string name="cloudss">clouds</string>
+    <string name="rain">rain</string>
+    <string name="fog">fog</string>
+    <string name="snow">snow</string>
 </resources>

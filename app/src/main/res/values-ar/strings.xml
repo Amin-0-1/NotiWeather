@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">الطقس</string>
+    <string name="location">Location</string>
+    <string name="updateAt">Updated at</string>
+    <string name="ClearSky">سماء صافية</string>
+    <string name="tempTemperature">24°C</string>
+    <string name="hint_temp">--°</string>
+    <string name="loading">جاري التحميل</string>
+    <string name="timeHourly">12AM</string>
+    <string name="image_content">img</string>
+    <string name="weather_state">جيد نسبياً</string>
+    <string name="weatherStateDesc">تقريبا جيد جداً</string>
+    <string name="humidity">الرطوبة</string>
+    <string name="pressure">الضغط</string>
+    <string name="clouds">السحب</string>
+    <string name="windSpead">سرعة الرياح</string>
+    <string name="home">الرئيسية</string>
+    <string name="favourite">المفضلة</string>
+    <string name="alarms">التنبيهات</string>
+    <string name="settings">الاعدادات</string>
+
+
+    <!-- Preference Titles -->
+    <string name="location_header">الموقع</string>
+    <string name="units_header">الوحدات</string>
+    <string name="language_header">اللغات</string>
+
+    <!-- Location Preferences -->
+    <string name="location_title">الموقع</string>
+
+    <!-- lang Preferences -->
+    <string name="lang_title">اللغات</string>
+
+    <!-- unit Preferences -->
+    <string name="units_title">الوحدات</string>
+
+
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="title_activity_my_map">الخريطة</string>
+    <string name="imgDesc">delete Image</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="set">ضبط</string>
+
+    <string name="cloudss">سحب</string>
+    <string name="rain">مطر</string>
+    <string name="fog">ضباب</string>
+    <string name="snow">ثلوج</string>
+</resources>

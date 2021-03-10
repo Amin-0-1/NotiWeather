@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="4">
@@ -7,7 +8,7 @@
 
     <TextView
         android:id="@+id/dayTextView"
-        style="@style/hourly_sheet"
+        style="@style/hourly"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -18,11 +19,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:src="@android:drawable/btn_star_big_on" />
+        app:srcCompat="@drawable/ic_cloud_off_24" />
 
     <TextView
         android:id="@+id/maxTemp"
-        style="@style/hourly_sheet"
+        style="@style/hourly"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -30,7 +31,7 @@
 
     <TextView
         android:id="@+id/minTemp"
-        style="@style/hourly_sheet"
+        style="@style/hourly"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

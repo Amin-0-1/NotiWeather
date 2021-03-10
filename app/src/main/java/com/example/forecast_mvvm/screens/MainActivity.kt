@@ -1,7 +1,10 @@
 package com.example.forecast_mvvm.screens
 
+import android.content.Context
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
@@ -9,9 +12,11 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.databinding.ActivityMainBinding
+import com.example.forecast_mvvm.utilities.ILanguage
 import com.example.forecast_mvvm.utilities.SettingsSP
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() ,ILanguage{
 
     lateinit var binding:ActivityMainBinding
     lateinit var navController:NavController
@@ -21,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         prepareNavigation()
-        SettingsSP.setDefaultSettings(this)
+        Log.i("TAG", "onCreate: ")
     }
 
     //Navigation specific
@@ -33,4 +38,24 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp( navController,null)
     }
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(newBase)
+        Log.i("TAG", "attachBaseContext: ")
+        SettingsSP.setDefaultSettings(this)
+        SettingsSP.loadSettings(applicationContext)
+
+        val lang = SettingsSP.getLanguageSetting()
+        Log.i("TAG", "attachBaseContext: ${SettingsSP.getLanguageSetting()}")
+//        getLocaleContext(newBase)
+        setLocale(lang,resources)
+    }
+
+//    private fun setLocale(lng: String) {
+//        val locale = Locale(lng)
+//        Locale.setDefault(locale)
+//        val config = Configuration()
+//        config.locale = locale
+//        resources.updateConfiguration(config, resources.displayMetrics)
+//    }
 }

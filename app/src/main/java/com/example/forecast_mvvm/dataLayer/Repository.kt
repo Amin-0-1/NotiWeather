@@ -1,18 +1,47 @@
 package com.example.forecast_mvvm.dataLayer
 import android.app.Application
+import android.location.Geocoder
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.forecast_mvvm.dataLayer.remote.response.WeatherResponse
 import com.example.forecast_mvvm.dataLayer.local.LocalDataSource
+import com.example.forecast_mvvm.dataLayer.local.response.Alarm
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteWeatherResponse
 import com.example.forecast_mvvm.dataLayer.remote.RemoteDataSource
+import kotlinx.coroutines.runBlocking
+import java.io.IOException
+import java.util.*
 
 class Repository(private val application: Application) {
 
     private val remoteDataSource:RemoteDataSource = RemoteDataSource()
     private val localDataSource:LocalDataSource = LocalDataSource(application)
 
+
+    fun getCityName(lat: Double, lon: Double): String {
+        val geocoder = Geocoder(application.applicationContext, Locale.getDefault())
+        Log.i("dddd", "getCityName: inside getcityname")
+        var res = "null"
+        if (lat != 0.0 && lon != 0.0) {
+
+            try {
+                Log.i("TAG", "latolon: lat: $lat , lon: $lon")
+                val addresses = geocoder.getFromLocation(lat, lon, 1)
+                res = addresses[0].subAdminArea
+
+                return res;
+            } catch (e: IOException) {
+                Log.i("TAG", "getCityName: catch")
+                e.printStackTrace()
+                return res
+            }
+            return res
+        }else{
+            Log.i("TAG", "getCityName: nullllllllllllllllllll")
+            return res
+        }
+    }
 
     suspend fun getWeatherData(lat: String="", lon: String=""): WeatherResponse {
 
@@ -23,12 +52,10 @@ class Repository(private val application: Application) {
             if(data.isSuccessful){
 //                data.body()?.lat = lat.toDouble()
 //                data.body()?.lon = lon.toDouble()
+                data.body()?.locality = getCityName(lat.toDouble(),lon.toDouble())
                 localDataSource.insertWeatherData(data.body()!!) // insert in room db
             }
         }
-
-        // get fav
-//        getnot
         return localDataSource.getWeatherData()
     }
 
@@ -52,9 +79,6 @@ class Repository(private val application: Application) {
         return localDataSource.getNotNullFavourite()
     }
 
-    fun getAllFavourite(): List<FavouriteCoordination> {
-        return localDataSource.getAllFavouriteCoord()
-    }
 
     fun deleteFavourite(lat: Double, lon: Double) {
         Log.i("TAG", "deleteFavourite: $lat")
@@ -63,8 +87,7 @@ class Repository(private val application: Application) {
     }
 
 
-    suspend fun getFavWeatherData(lat: Double=0.0 , lon: Double=0.0): FavouriteWeatherResponse {
-
+    suspend fun getFavWeatherData(lat: Double=0.0 , lon: Double=0.0,state:Boolean): FavouriteWeatherResponse {
         // get current
         if(lat != 0.0 && lon != 0.0){
             val data = remoteDataSource.getFavouriteWeatherData(lat.toString(),lon.toString()) // api call
@@ -77,11 +100,78 @@ class Repository(private val application: Application) {
             }
         }
 
+
         return localDataSource.getFavouriteWeatherData(lat,lon)
     }
 
     fun getLocalFavouriteWeather(lat: Double, lon: Double): LiveData<FavouriteWeatherResponse> {
         return localDataSource.getLocalFavouriteWeather(lat,lon)
+    }
+
+
+
+    fun getWeatherAlertStatus(lat: Double, lng: Double, type: String): Boolean {
+        var key = false
+
+
+        runBlocking {
+            var local = localDataSource.getWeatherData()
+
+            val data = remoteDataSource.getCurrentWeatherData(lat.toString(), lng.toString()) // api call
+            Log.i("TAG", "getWeatherData: inside api")
+            if (data.isSuccessful) {
+                local = data.body()!!
+
+                localDataSource.insertWeatherData(local) // insert in room db
+                if (local.weatherState.weather[0].main.toUpperCase() == type.toUpperCase()) {
+                    key = true
+                }
+
+            }
+        }
+        return key
+    }
+
+    fun getCurrentLat(): String? {
+        return localDataSource.getCurrentLat()
+    }
+
+    fun getCurrentLon(): String? {
+        return localDataSource.getCurrentLon()
+    }
+
+    fun insertAlarm(
+        currentLat: String,
+        currentLon: String,
+        type: String,
+        date: String,
+        time: String
+    ): Long {
+        return localDataSource.insertAlarm(currentLat,currentLon,type,date,time)
+    }
+
+    fun getAlarmLat(id: Long): Double {
+        return localDataSource.getAlarmLat(id)
+    }
+
+    fun getAlarmLon(id: Long): Double {
+        return localDataSource.getAlarmLon(id)
+    }
+
+    fun getAlarmType(id: Long): String? {
+        return localDataSource.getAlarmType(id)
+    }
+
+    fun deleteAlarm(id: Long) {
+        localDataSource.deleteAlarm(id)
+    }
+
+    fun getAllAlarms(): LiveData<List<Alarm>> {
+        return localDataSource.getAllAlarms()
+    }
+
+    fun updateLocality(cityName: String) {
+        return localDataSource.updateLocality(cityName)
     }
 
 

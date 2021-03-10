@@ -24,8 +24,8 @@ data class WeatherResponse(
     var lat: Double,
     var lon: Double,
     val timezone: String,
-    @SerializedName("timezone_offset")
-    val timezoneOffset: Int
+
+    var locality:String?
 ){
     @PrimaryKey(autoGenerate = false)
     var id :Int = 0

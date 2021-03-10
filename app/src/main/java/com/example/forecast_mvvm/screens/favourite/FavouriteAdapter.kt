@@ -17,21 +17,19 @@ import com.example.forecast_mvvm.screens.favourite.bottomSheet.BottomSheetFavour
 
 class FavouriteAdapter(
     private var favouriteList: MutableList<FavouriteCoordination>,
-    private var viewModel: FavouriteViewModel
+    private var viewModel: FavouriteViewModel,
+    private var context: Context
 ): RecyclerView.Adapter<FavouriteAdapter.MyViewHolder>() {
 
-    private lateinit var context:Context
-
-    fun setAdapterData(favourite: List<FavouriteCoordination>,context: Context) {
+    fun setAdapterData(favourite: List<FavouriteCoordination>) {
         favouriteList.clear()
         favouriteList.addAll(favourite)
         notifyDataSetChanged()
 
-        this.context = context
     }
 
     class MyViewHolder(view: View): RecyclerView.ViewHolder(view)  {
-        val fav_name: TextView = itemView.findViewById(R.id.fav_title)
+        val fav_name: TextView = itemView.findViewById(R.id.alarm_type)
         val deleteBtn:ImageView  = itemView.findViewById(R.id.delete_btn)
     }
 
@@ -57,13 +55,6 @@ class FavouriteAdapter(
             bundle.putDouble("lon", favouriteList[position].lon)
             bottomSheetDialogFragment.arguments = bundle
             bottomSheetDialogFragment.show((context as FragmentActivity).supportFragmentManager,"bottomUpSheet")
-//            val intent = Intent(context,Details::class.java)
-//            intent.putExtra("lat",favouriteList[position].lat)
-//            intent.putExtra("lon",favouriteList[position].lon)
-//
-//            context.startActivity(intent)
-
-
         }
 
         holder.deleteBtn.setOnClickListener {

@@ -7,6 +7,7 @@ import android.location.Geocoder
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -49,6 +50,7 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
         if(title == null && !isNetworkAvailable()){
             Log.i("TAG", "saveFavouriteCoord: meessage post false")
             message.postValue(false)
+            Toast.makeText(context,"Data Will be Available once you're connected to Internet",Toast.LENGTH_LONG).show()
             repository.saveFavouriteCoord(latitude,longitude,title)
         }else if(title == null){ // network exist
             repository.saveFavouriteCoord(latitude,longitude,getCityName(latitude,longitude))
@@ -78,7 +80,7 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
         return repository.getNotNullFavourite()
     }
 
-    private fun isNetworkAvailable(): Boolean {
+    fun isNetworkAvailable(): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
         return activeNetwork?.isConnectedOrConnecting == true
@@ -95,7 +97,7 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    private fun getCityName(lat: Double, lon: Double): String {
+    private fun getCityName(lat: Double, lon: Double): String? {
 
         if (lat != 0.0 && lon != 0.0) {
 
@@ -107,10 +109,10 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
                 Log.i("TAG", "getCityName: catch")
                 e.printStackTrace()
             }
-            return "null"
+            return null
         }else{
             Log.i("TAG", "getCityName: null")
-            return "null"
+            return null
         }
     }
 
@@ -122,10 +124,16 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
 //        }
     }
 
+    fun isNetworkAvailable(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        return activeNetwork?.isConnectedOrConnecting == true
+    }
+
     fun getFavouriteItemDetails(favouriteCoordination: FavouriteCoordination) {
         viewModelScope.launch {
             Log.i("lat", "getFavouriteItemDetails: lat is ${favouriteCoordination.lat}")
-            repository.getFavWeatherData(favouriteCoordination.lat,favouriteCoordination.lon)
+            repository.getFavWeatherData(favouriteCoordination.lat,favouriteCoordination.lon,isNetworkAvailable())
         }
     }
     fun getLocalFavouriteItemDetails(lat: Double, lon: Double): LiveData<FavouriteWeatherResponse> {

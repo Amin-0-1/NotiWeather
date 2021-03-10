@@ -17,7 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -80,7 +80,7 @@ dependencies {
     implementation "com.squareup.picasso:picasso:$picasso"
 
     //location
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     //map
     implementation "com.google.android.gms:play-services-maps:$map_version"
@@ -88,7 +88,12 @@ dependencies {
     //gif
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
 
+    // work manager
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
     implementation 'androidx.multidex:multidex:2.0.1'
+
+
 
 
 }
