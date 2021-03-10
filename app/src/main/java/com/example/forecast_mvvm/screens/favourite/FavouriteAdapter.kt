@@ -1,7 +1,6 @@
 package com.example.forecast_mvvm.screens.favourite
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
 import com.example.forecast_mvvm.screens.favourite.bottomSheet.BottomSheetFavourite
-import java.security.PrivateKey
 
 
 class FavouriteAdapter(
@@ -30,7 +28,7 @@ class FavouriteAdapter(
     }
 
     class MyViewHolder(view: View): RecyclerView.ViewHolder(view)  {
-        val fav_name: TextView = itemView.findViewById(R.id.fav_title)
+        val fav_name: TextView = itemView.findViewById(R.id.alarm_type)
         val deleteBtn:ImageView  = itemView.findViewById(R.id.delete_btn)
     }
 

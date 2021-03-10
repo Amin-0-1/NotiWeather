@@ -2,9 +2,9 @@ package com.example.forecast_mvvm.screens.settings
 
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -14,10 +14,11 @@ import androidx.preference.PreferenceFragmentCompat
 import com.example.forecast_mvvm.MyMap
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.screens.MainActivity
+import com.example.forecast_mvvm.utilities.ILanguage
 import com.example.forecast_mvvm.utilities.SettingsSP
 import java.util.*
 
-class SettingsFragment : PreferenceFragmentCompat() {
+class SettingsFragment : PreferenceFragmentCompat() ,ILanguage{
 
     private lateinit var mPreferences:SharedPreferences
 
@@ -56,7 +57,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         language?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, newVal ->
 //            setLocale()
             Log.i("TAG", "onActivityCreated: $newVal")
-            setLocale(newVal.toString())
+            setLocale(newVal.toString(),resources)
             restartActivity()
             true
         }
@@ -66,15 +67,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         requireActivity().finish();
         val refresh = Intent(context, MainActivity::class.java)
         startActivity(refresh)
-    }
-
-
-    private fun setLocale(lng: String) {
-        val locale = Locale(lng)
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.locale = locale
-        resources.updateConfiguration(config, resources.displayMetrics)
     }
 
     override fun onResume() {

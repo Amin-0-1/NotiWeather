@@ -37,9 +37,14 @@
 
 
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="title_activity_my_map">Map</string>
+    <string name="title_activity_my_map">الخريطة</string>
     <string name="imgDesc">delete Image</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="set">set</string>
+    <string name="set">ضبط</string>
+
+    <string name="cloudss">سحب</string>
+    <string name="rain">مطر</string>
+    <string name="fog">ضباب</string>
+    <string name="snow">ثلوج</string>
 </resources>

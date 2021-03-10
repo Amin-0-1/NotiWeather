@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -95,7 +94,8 @@ class WeatherFragment : Fragment() {
             dailyAdapter.setAdapterData(it.daily)
 
             updateBlockingUi()
-            updateLocation(it.lat, it.lon)
+//            updateLocation(it.lat, it.lon)
+            updateLocation(it.locality)
             updateCurrentDate(it.weatherState.dt)
             updateTemperature(it.weatherState)
             updateWeatherDetails(it.weatherState)
@@ -143,11 +143,12 @@ class WeatherFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle = viewModel.getCurrentDate(dt)
     }
 
-    private fun updateLocation(lat: Double, lon: Double) {
-        val value = viewModel.getCityName(lat, lon)
+    private fun updateLocation(locality: String?) {
+//        val value = viewModel.getCityName(lat, lon)
 
-        if(value != "null"){
-            (activity as? AppCompatActivity)?.supportActionBar?.title = value
+        Log.i("TAG", "updateLocation lllllllllllllllllllllllll: $locality")
+        if(locality != "null"){
+            (activity as? AppCompatActivity)?.supportActionBar?.title = locality
         }else{
             (activity as? AppCompatActivity)?.supportActionBar?.title = resources.getString(R.string.loading)
 

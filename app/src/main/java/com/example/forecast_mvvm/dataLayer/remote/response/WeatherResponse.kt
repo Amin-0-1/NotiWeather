@@ -21,11 +21,13 @@ data class WeatherResponse(
 
     val alerts: List<Alert>? = listOf(),
 
+    @ColumnInfo(name = "lat")
     var lat: Double,
+    @ColumnInfo(name = "lon")
     var lon: Double,
     val timezone: String,
-    @SerializedName("timezone_offset")
-    val timezoneOffset: Int
+
+    var locality:String?
 ){
     @PrimaryKey(autoGenerate = false)
     var id :Int = 0

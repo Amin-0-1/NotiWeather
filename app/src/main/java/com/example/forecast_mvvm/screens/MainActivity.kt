@@ -12,10 +12,11 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.databinding.ActivityMainBinding
+import com.example.forecast_mvvm.utilities.ILanguage
 import com.example.forecast_mvvm.utilities.SettingsSP
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() ,ILanguage{
 
     lateinit var binding:ActivityMainBinding
     lateinit var navController:NavController
@@ -47,37 +48,14 @@ class MainActivity : AppCompatActivity() {
         val lang = SettingsSP.getLanguageSetting()
         Log.i("TAG", "attachBaseContext: ${SettingsSP.getLanguageSetting()}")
 //        getLocaleContext(newBase)
-        setLocale(lang)
+        setLocale(lang,resources)
     }
 
-    private fun setLocale(lng: String) {
-        val locale = Locale(lng)
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.locale = locale
-        resources.updateConfiguration(config, resources.displayMetrics)
-    }
-
-//    fun getLocaleContext(context: Context?): Context? {
-//        context?.let {
-//            val locale = Locale(getLocale(context))
-//            val res = context.resources
-//            val config = Configuration(res.configuration)
-//            config.setLocale(locale)
-//            return context.createConfigurationContext(config)
-//        }
-//
-//        return context
-//    }
-//    fun getLocale(context: Context): String {
-////        val modelRepository = ModelRepository(context = context)
-//        var currentLang  = SettingsSP.getLanguageSetting()
-//
-////        when(currentLang){
-////            DEFAULT_LANG_STRING-> currentLang = "en"
-////            ARABIC_LANG_STRING-> currentLang = "ar"
-////        }
-//        Log.i("Helper",currentLang)
-//        return  currentLang
+//    private fun setLocale(lng: String) {
+//        val locale = Locale(lng)
+//        Locale.setDefault(locale)
+//        val config = Configuration()
+//        config.locale = locale
+//        resources.updateConfiguration(config, resources.displayMetrics)
 //    }
 }

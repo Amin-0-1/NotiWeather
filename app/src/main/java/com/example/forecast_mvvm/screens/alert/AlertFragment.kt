@@ -1,19 +1,26 @@
 package com.example.forecast_mvvm.screens.alert
 
-import androidx.lifecycle.ViewModelProvider
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import com.example.forecast_mvvm.R
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast_mvvm.databinding.AlertFragmentBinding
-import java.util.zip.Inflater
+import com.google.android.material.snackbar.Snackbar
+
 
 class AlertFragment : Fragment() {
 
     lateinit var binding:AlertFragmentBinding
+    private lateinit var alarmAdapter: AlarmAdapter
+
     companion object {
         fun newInstance() = AlertFragment()
     }
@@ -30,16 +37,32 @@ class AlertFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
 
+        prepareRecyclerView()
         binding.floatingActionButton.setOnClickListener{
-            val dialog = Dialogx()
-            dialog.show(childFragmentManager,"dialog")
+            val dialog = Dialogx(viewModel)
+            dialog.show(childFragmentManager, "dialog")
         }
 
+        viewModel.getAllAlarms().observe(viewLifecycleOwner, Observer {
+            alarmAdapter.setAdapterData(it)
+        })
+
+
+    }
+
+    private fun prepareRecyclerView() {
+
+
+        val horizontalLayout = LinearLayoutManager(context)
+        horizontalLayout.orientation = LinearLayoutManager.VERTICAL
+        binding.recyclerView.layoutManager = horizontalLayout
+        alarmAdapter = AlarmAdapter(mutableListOf(), viewModel, requireContext())
+        binding.recyclerView.adapter = alarmAdapter
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle= null
     }
 

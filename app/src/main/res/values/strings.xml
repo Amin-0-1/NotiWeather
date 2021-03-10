@@ -40,4 +40,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="set">set</string>
+
+
+    <string name="cloudss">clouds</string>
+    <string name="rain">rain</string>
+    <string name="fog">fog</string>
+    <string name="snow">snow</string>
 </resources>
