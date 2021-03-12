@@ -38,7 +38,7 @@ class MyMap : AppCompatActivity(), OnMapReadyCallback {
         map.mapType = GoogleMap.MAP_TYPE_HYBRID;
         SettingsSP.loadSettings(applicationContext)
 
-        if(SettingsSP.getLocationSetting() != "GPS"){
+        if(SettingsSP.getLocationSetting() != "GPS" && state.equals("set")){
             val lat = mPreferences.getString("lat","null")
             val lon = mPreferences.getString("lon","null")
 

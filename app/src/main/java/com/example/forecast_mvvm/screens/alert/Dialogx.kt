@@ -99,17 +99,10 @@ class Dialogx(private val viewModel: AlertViewModel) : DialogFragment(){
     }
 
     private fun initWorkManager(id: Long) {
-        /* val myConstraints = Constraints.Builder()
-        .setRequiresDeviceIdle(true) //checks whether device should be idle for the WorkRequest to run
-        .setRequiresCharging(true) //checks whether device should be charging for the WorkRequest to run
-        .setRequiredNetworkType(NetworkType.CONNECTED) //checks whether device should have Network Connection
-        .setRequiresBatteryNotLow(true) // checks whether device battery should have a specific level to run the work request
-        .setRequiresStorageNotLow(true) // checks whether device storage should have a specific level to run the work request
-        .build()*/
 
         Log.i("TAG", "initWorkManager:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx $id")
         val data = workDataOf("id" to id)
-        val oneTimeRequest = OneTimeWorkRequestBuilder<Worker>()
+        val oneTimeRequest = OneTimeWorkRequestBuilder<MyWorker>()
             .setInitialDelay(calender.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
             .setInputData(data)
             .addTag("$id")

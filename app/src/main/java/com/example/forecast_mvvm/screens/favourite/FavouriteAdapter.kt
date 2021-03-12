@@ -1,8 +1,10 @@
 package com.example.forecast_mvvm.screens.favourite
 
+import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
 import com.example.forecast_mvvm.screens.favourite.bottomSheet.BottomSheetFavourite
-
 
 class FavouriteAdapter(
     private var favouriteList: MutableList<FavouriteCoordination>,
@@ -54,11 +55,33 @@ class FavouriteAdapter(
             bundle.putDouble("lat", favouriteList[position].lat)
             bundle.putDouble("lon", favouriteList[position].lon)
             bottomSheetDialogFragment.arguments = bundle
-            bottomSheetDialogFragment.show((context as FragmentActivity).supportFragmentManager,"bottomUpSheet")
+            bottomSheetDialogFragment.show(
+                (context as FragmentActivity).supportFragmentManager,
+                "bottomUpSheet"
+            )
         }
 
         holder.deleteBtn.setOnClickListener {
-            viewModel.deleteFavourite(favouriteList[position].lat, favouriteList[position].lon)
+
+            val alert = AlertDialog.Builder(context)
+            alert.setTitle("Delete Favourite Location")
+            alert.setMessage("Are you sure ?")
+            alert.setPositiveButton(android.R.string.yes, object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface, which: Int) {
+                    Log.i("alert", "onClick: delete from view model")
+                    viewModel.deleteFavourite(
+                        favouriteList[position].lat,
+                        favouriteList[position].lon
+                    )
+                }
+            })
+            alert.setNegativeButton(
+                android.R.string.no
+            ) { dialog, which -> // close dialog
+                dialog.cancel()
+            }
+            alert.show()
+
         }
     }
 

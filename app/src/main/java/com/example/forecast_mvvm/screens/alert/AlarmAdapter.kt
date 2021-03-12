@@ -1,7 +1,10 @@
 package com.example.forecast_mvvm.screens.alert
 
 import android.R.attr.data
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,29 +49,29 @@ class AlarmAdapter(
         holder.timeText.text = alarmList[position].time
 
         holder.deleteBtn.setOnClickListener{
-            val id = alarmList[position].id
-            WorkManager.getInstance().cancelAllWorkByTag("$id")
-            viewModel.deleteAlarm(id)
-            Toast.makeText(context,"Alarm deleted Successfully",Toast.LENGTH_SHORT).show()
+
+            val alert = AlertDialog.Builder(context)
+            alert.setTitle("Delete Alarm")
+            alert.setMessage("Are you sure ?")
+            alert.setPositiveButton(android.R.string.yes, object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface, which: Int) {
+                    val id = alarmList[position].id
+                    WorkManager.getInstance().cancelAllWorkByTag("$id")
+                    viewModel.deleteAlarm(id)
+                    Toast.makeText(context,"Alarm deleted Successfully",Toast.LENGTH_SHORT).show()
+                }
+            })
+            alert.setNegativeButton(
+                android.R.string.no
+            ) { dialog, which -> // close dialog
+                dialog.cancel()
+            }
+            alert.show()
         }
     }
 
     override fun getItemCount(): Int {
         return alarmList.size
-    }
-
-    fun removeItem(position: Int) {
-        alarmList.removeAt(position)
-        notifyItemRemoved(position)
-    }
-
-    fun restoreItem(item: Alarm, position: Int) {
-        alarmList.add(item)
-        notifyItemInserted(position)
-    }
-
-    fun getData(): List<Alarm> {
-        return alarmList
     }
 
 }

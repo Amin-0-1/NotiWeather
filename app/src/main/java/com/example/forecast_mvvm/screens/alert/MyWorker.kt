@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.DEFAULT_VIBRATE
 import androidx.core.app.NotificationManagerCompat
@@ -20,46 +21,64 @@ import androidx.work.WorkerParameters
 import com.example.forecast_mvvm.dataLayer.Repository
 
 
-//import com.mohamedabdallah.weather.repo.HomeRepository
-//import com.mohamedabdallah.weather.ui.navigation.home.HomeViewModel
+class MyWorker(private val context: Context, workerParams: WorkerParameters) :Worker(context, workerParams){
 
 
-class Worker(context: Context, workerParams: WorkerParameters) :Worker(context, workerParams){
-
-    private val repo = Repository(Application())
+    val repo = Repository(context.applicationContext as Application)
     override fun doWork(): Result {
 
-//        val type=inputData.getString("type")
-//        val lat=inputData.getDouble("lat", 0.0)
-//        val lng=inputData.getDouble("lng", 0.0)
+//        createNotificationChannels()
+//        sendOnChannel2("dddd")
+//        playSound()
 
-        val id = inputData.getLong("id",0)
+        val id = inputData.getLong("id", 0)
         Log.i("TAG", "doWork:-------------------------------------- $id")
         val lat = repo.getAlarmLat(id)
         val lon = repo.getAlarmLon(id)
         val type = repo.getAlarmType(id)
-        val x= repo.getWeatherAlertStatus(lat, lon, type!!)
-        if (x == true)
+        val checkState= repo.getWeatherAlertStatus(lat, lon, type!!)
+        if (checkState)
         {
-            Log.i("TAG", "doWork: dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+            Log.i(
+                "TAG",
+                "doWork: dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            )
             createNotificationChannels()
             sendOnChannel2("$type")
+            playSound()
         }
         else{
 //            createNotificationChannels()
 //            sendOnChannel2("$type")
-            Log.i("TAG", "doWork: hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+            Log.i(
+                "TAG",
+                "doWork: hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+            )
         }
 
         repo.deleteAlarm(id)
         return Result.success()
     }
 
+    private fun playSound() {
+        try {
+            val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            val r = RingtoneManager.getRingtone(applicationContext, notification)
+            r.play()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private  fun createNotificationChannels() {
         // create android channel
         var androidChannel: NotificationChannel? = null
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            androidChannel = NotificationChannel("2", "channel", NotificationManager.IMPORTANCE_DEFAULT)
+            androidChannel = NotificationChannel(
+                "2",
+                "channel",
+                NotificationManager.IMPORTANCE_HIGH
+            )
             androidChannel.enableLights(true)
             // Sets whether notification posted to this channel should vibrate.
             androidChannel.enableVibration(true)
@@ -67,7 +86,9 @@ class Worker(context: Context, workerParams: WorkerParameters) :Worker(context, 
             androidChannel.lightColor = Color.GREEN
             // Sets whether notifications posted to this channel appear on the lockscreen or not
             androidChannel.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
-            val manager: NotificationManager = applicationContext.getSystemService(NotificationManager::class.java)
+            val manager: NotificationManager = applicationContext.getSystemService(
+                NotificationManager::class.java
+            )
             manager.createNotificationChannel(androidChannel)
         }
     }
@@ -75,16 +96,15 @@ class Worker(context: Context, workerParams: WorkerParameters) :Worker(context, 
     private fun sendOnChannel2(message: String) {
 
         val notificationManager = NotificationManagerCompat.from(applicationContext);
-        val alarmSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-        val notification: Notification = NotificationCompat.Builder(applicationContext, "2").setDefaults( DEFAULT_VIBRATE )
+        val notification: Notification = NotificationCompat.Builder(applicationContext, "2").setDefaults(
+            DEFAULT_VIBRATE
+        )
             .setSmallIcon(R.drawable.ic_popup_reminder)
             .setContentTitle(message)
             .setContentText("watch out now it's $message in your area")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setOnlyAlertOnce(true)
-            .setAutoCancel(true)
-            .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
             .build()
         notificationManager.notify(2, notification)
     }
