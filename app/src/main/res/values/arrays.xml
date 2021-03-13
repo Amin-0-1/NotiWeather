@@ -42,6 +42,7 @@
         <item>@string/cloudss</item>
         <item>@string/fog</item>
         <item>@string/snow</item>
+<!--        <item>@string/Thunderstorm</item>-->
     </string-array>
 
 </resources>

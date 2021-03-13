@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/imgDesc"
-        android:src="@drawable/ic_calendar_today_24"
+        app:srcCompat="@drawable/ic_datepicker"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,7 +36,7 @@
         android:layout_marginStart="164dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/imgDesc"
-        android:src="@drawable/ic_time_24"
+        app:srcCompat="@drawable/ic_timepicker"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

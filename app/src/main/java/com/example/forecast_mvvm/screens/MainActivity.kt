@@ -1,20 +1,22 @@
 package com.example.forecast_mvvm.screens
 
 import android.content.Context
-import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import androidx.preference.PreferenceManager
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.databinding.ActivityMainBinding
 import com.example.forecast_mvvm.utilities.ILanguage
 import com.example.forecast_mvvm.utilities.SettingsSP
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.MaterialShapeDrawable
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() ,ILanguage{
 
@@ -27,6 +29,16 @@ class MainActivity : AppCompatActivity() ,ILanguage{
         setSupportActionBar(binding.toolbar)
         prepareNavigation()
         Log.i("TAG", "onCreate: ")
+
+        val radius = resources.getDimension(com.example.forecast_mvvm.R.dimen.default_corner_radius) //32dp
+
+        val toolbar = findViewById<MaterialToolbar>(binding.toolbar.id)
+
+        val materialShapeDrawable = toolbar.background as MaterialShapeDrawable
+        materialShapeDrawable.shapeAppearanceModel = materialShapeDrawable.shapeAppearanceModel
+            .toBuilder()
+            .setAllCorners(CornerFamily.ROUNDED, radius)
+            .build()
     }
 
     //Navigation specific
@@ -36,7 +48,7 @@ class MainActivity : AppCompatActivity() ,ILanguage{
         NavigationUI.setupActionBarWithNavController(this, navController)
     }
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp( navController,null)
+        return NavigationUI.navigateUp(navController, null)
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -48,7 +60,7 @@ class MainActivity : AppCompatActivity() ,ILanguage{
         val lang = SettingsSP.getLanguageSetting()
         Log.i("TAG", "attachBaseContext: ${SettingsSP.getLanguageSetting()}")
 //        getLocaleContext(newBase)
-        setLocale(lang,resources)
+        setLocale(lang, resources)
     }
 
 //    private fun setLocale(lng: String) {

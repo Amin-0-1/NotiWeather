@@ -3,4 +3,5 @@
     <dimen name="xProg">100dp</dimen>
     <dimen name="yProg">200dp</dimen>
     <dimen name="left_20">20dp</dimen>
+    <dimen name="default_corner_radius">32dp</dimen>
 </resources>

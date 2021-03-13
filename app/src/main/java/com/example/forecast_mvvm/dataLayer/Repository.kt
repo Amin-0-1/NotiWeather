@@ -113,22 +113,13 @@ class Repository(private val application: Application) {
     fun getWeatherAlertStatus(lat: Double, lng: Double, type: String): Boolean {
         var key = false
 
-
-        runBlocking {
+        Log.i("TAG", "getWeatherAlertStatus: inside")
+//        runBlocking {
             var local = localDataSource.getWeatherData()
-
-            val data = remoteDataSource.getCurrentWeatherData(lat.toString(), lng.toString()) // api call
-            Log.i("TAG", "getWeatherData: inside api")
-            if (data.isSuccessful) {
-                local = data.body()!!
-
-                localDataSource.insertWeatherData(local) // insert in room db
-                if (local.weatherState.weather[0].main.toUpperCase() == type.toUpperCase()) {
-                    key = true
-                }
-
+            if (local.weatherState.weather[0].main.toUpperCase() == type.toUpperCase()) {
+                key = true
             }
-        }
+//        }
         return key
     }
 

@@ -6,22 +6,25 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.media.RingtoneManager
-import android.net.Uri
 import android.os.Build
-import android.provider.Settings
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.DEFAULT_VIBRATE
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.forecast_mvvm.dataLayer.Repository
 
 
-class MyWorker(private val context: Context, workerParams: WorkerParameters) :Worker(context, workerParams){
+class MyWorker(private val context: Context, workerParams: WorkerParameters) :Worker(
+    context,
+    workerParams
+){
 
 
     val repo = Repository(context.applicationContext as Application)
@@ -33,9 +36,12 @@ class MyWorker(private val context: Context, workerParams: WorkerParameters) :Wo
 
         val id = inputData.getLong("id", 0)
         Log.i("TAG", "doWork:-------------------------------------- $id")
+
+
         val lat = repo.getAlarmLat(id)
         val lon = repo.getAlarmLon(id)
         val type = repo.getAlarmType(id)
+
         val checkState= repo.getWeatherAlertStatus(lat, lon, type!!)
         if (checkState)
         {
@@ -49,7 +55,9 @@ class MyWorker(private val context: Context, workerParams: WorkerParameters) :Wo
         }
         else{
 //            createNotificationChannels()
-//            sendOnChannel2("$type")
+//            sendOnChannel2("false")
+//            playSound()
+
             Log.i(
                 "TAG",
                 "doWork: hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
@@ -99,7 +107,9 @@ class MyWorker(private val context: Context, workerParams: WorkerParameters) :Wo
         val notification: Notification = NotificationCompat.Builder(applicationContext, "2").setDefaults(
             DEFAULT_VIBRATE
         )
-            .setSmallIcon(R.drawable.ic_popup_reminder)
+            .setSmallIcon(com.example.forecast_mvvm.R.drawable.ic_alarm_on_24)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
+                        com.example.forecast_mvvm.R.drawable.ic_alarm_on_24))
             .setContentTitle(message)
             .setContentText("watch out now it's $message in your area")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
