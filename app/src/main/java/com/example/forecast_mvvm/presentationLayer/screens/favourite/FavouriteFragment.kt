@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.screens.favourite
+package com.example.forecast_mvvm.presentationLayer.screens.favourite
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.forecast_mvvm.MyMap
+import com.example.forecast_mvvm.presentationLayer.other.MyMap
 import com.example.forecast_mvvm.databinding.FavouriteFragmentBinding
 
 class FavouriteFragment : Fragment() {

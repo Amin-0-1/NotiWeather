@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.screens.home
+package com.example.forecast_mvvm.presentationLayer.screens.home
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -34,8 +34,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.*
-import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 
 

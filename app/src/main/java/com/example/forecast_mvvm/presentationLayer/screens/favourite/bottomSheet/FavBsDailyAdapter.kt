@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.screens.favourite.bottomSheet
+package com.example.forecast_mvvm.presentationLayer.screens.favourite.bottomSheet
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.dataLayer.entities.models.Daily
-import com.example.forecast_mvvm.screens.favourite.FavouriteViewModel
+import com.example.forecast_mvvm.presentationLayer.screens.favourite.FavouriteViewModel
 import com.squareup.picasso.Picasso
 
 class FavBsDailyAdapter(

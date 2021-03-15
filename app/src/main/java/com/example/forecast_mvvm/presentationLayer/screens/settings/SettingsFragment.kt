@@ -1,22 +1,19 @@
-package com.example.forecast_mvvm.screens.settings
+package com.example.forecast_mvvm.presentationLayer.screens.settings
 
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.example.forecast_mvvm.MyMap
+import com.example.forecast_mvvm.presentationLayer.other.MyMap
 import com.example.forecast_mvvm.R
-import com.example.forecast_mvvm.screens.MainActivity
+import com.example.forecast_mvvm.presentationLayer.other.MainActivity
 import com.example.forecast_mvvm.utilities.ILanguage
 import com.example.forecast_mvvm.utilities.SettingsSP
-import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat() ,ILanguage{
 

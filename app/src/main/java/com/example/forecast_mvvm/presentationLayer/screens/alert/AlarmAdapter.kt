@@ -1,10 +1,8 @@
-package com.example.forecast_mvvm.screens.alert
+package com.example.forecast_mvvm.presentationLayer.screens.alert
 
-import android.R.attr.data
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

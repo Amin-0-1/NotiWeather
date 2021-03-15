@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginEnd="8dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:cardBackgroundColor="#2c1c4c"
+    app:cardCornerRadius="5dp">
 
-    <TextView
-        android:id="@+id/textViewTime"
-        style="@style/hourly"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/timeHourly" />
+        android:orientation="vertical"
+        android:padding="10dp">
 
-    <ImageView
-        android:id="@+id/tempImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/image_content"
-        app:srcCompat="@drawable/ic_cloud_off_24" />
+        <TextView
+            android:id="@+id/textViewTime"
+            style="@style/hourly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/timeHourly" />
 
-    <TextView
-        android:id="@+id/textViewTemp"
-        style="@style/hourly"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/tempTemperature" />
-</LinearLayout>
+        <ImageView
+            android:id="@+id/tempImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/image_content"
+            app:srcCompat="@drawable/ic_cloud_off_24" />
+
+        <TextView
+            android:id="@+id/textViewTemp"
+            style="@style/hourly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/tempTemperature" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

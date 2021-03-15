@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.screens.favourite.bottomSheet
+package com.example.forecast_mvvm.presentationLayer.screens.favourite.bottomSheet
 
 import android.app.Dialog
 import android.os.Bundle
@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
 import com.example.forecast_mvvm.databinding.FavWeatherFragmentBinding
-import com.example.forecast_mvvm.screens.favourite.FavouriteViewModel
+import com.example.forecast_mvvm.presentationLayer.screens.favourite.FavouriteViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

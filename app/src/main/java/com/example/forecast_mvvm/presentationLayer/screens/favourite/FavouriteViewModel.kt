@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.screens.favourite
+package com.example.forecast_mvvm.presentationLayer.screens.favourite
 
 import android.annotation.SuppressLint
 import android.app.Application

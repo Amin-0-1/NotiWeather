@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.screens.favourite
+package com.example.forecast_mvvm.presentationLayer.screens.favourite
 
 import android.app.AlertDialog
 import android.content.Context
@@ -14,7 +14,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
-import com.example.forecast_mvvm.screens.favourite.bottomSheet.BottomSheetFavourite
+import com.example.forecast_mvvm.presentationLayer.screens.favourite.bottomSheet.BottomSheetFavourite
 
 class FavouriteAdapter(
     private var favouriteList: MutableList<FavouriteCoordination>,

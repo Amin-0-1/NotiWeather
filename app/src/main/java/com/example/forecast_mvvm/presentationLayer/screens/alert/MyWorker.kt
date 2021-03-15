@@ -1,6 +1,5 @@
-package com.example.forecast_mvvm.screens.alert
+package com.example.forecast_mvvm.presentationLayer.screens.alert
 
-import android.R
 import android.app.Application
 import android.app.Notification
 import android.app.NotificationChannel
@@ -8,17 +7,15 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.media.RingtoneManager
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.DEFAULT_VIBRATE
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.forecast_mvvm.dataLayer.Repository
+import kotlinx.coroutines.*
 
 
 class MyWorker(private val context: Context, workerParams: WorkerParameters) :Worker(
@@ -33,35 +30,26 @@ class MyWorker(private val context: Context, workerParams: WorkerParameters) :Wo
 //        createNotificationChannels()
 //        sendOnChannel2("dddd")
 //        playSound()
-
+//
         val id = inputData.getLong("id", 0)
-        Log.i("TAG", "doWork:-------------------------------------- $id")
-
-
         val lat = repo.getAlarmLat(id)
         val lon = repo.getAlarmLon(id)
         val type = repo.getAlarmType(id)
+        runBlocking {
+//            withContext(Dispatchers.Main){
+//                Toast.makeText(context,"inside do work", Toast.LENGTH_LONG).show()
+//            }
 
-        val checkState= repo.getWeatherAlertStatus(lat, lon, type!!)
-        if (checkState)
-        {
-            Log.i(
-                "TAG",
-                "doWork: dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-            )
-            createNotificationChannels()
-            sendOnChannel2("$type")
-            playSound()
-        }
-        else{
-//            createNotificationChannels()
-//            sendOnChannel2("false")
-//            playSound()
-
-            Log.i(
-                "TAG",
-                "doWork: hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
-            )
+            val job = CoroutineScope(Dispatchers.IO).launch { repo.getWeatherData(lat.toString(),lon.toString())}
+            job.invokeOnCompletion {
+                val checkState= repo.getWeatherAlertStatus(lat, lon, type!!)
+                if (checkState)
+                {
+                    createNotificationChannels()
+                    sendOnChannel2("$type")
+                    playSound()
+                }
+            }
         }
 
         repo.deleteAlarm(id)

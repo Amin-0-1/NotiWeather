@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.screens.home
+package com.example.forecast_mvvm.presentationLayer.screens.home
 
 import android.content.Context
 import android.view.LayoutInflater

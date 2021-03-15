@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm
+package com.example.forecast_mvvm.presentationLayer.other
 
 import androidx.multidex.MultiDexApplication
 

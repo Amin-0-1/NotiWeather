@@ -1,6 +1,5 @@
-package com.example.forecast_mvvm.screens.alert
+package com.example.forecast_mvvm.presentationLayer.screens.alert
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast_mvvm.databinding.AlertFragmentBinding
-import com.google.android.material.snackbar.Snackbar
 
 
 class AlertFragment : Fragment() {

@@ -6,7 +6,7 @@
     style="@style/temp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.home.WeatherFragment"
+    tools:context=".presentationLayer.screens.home.WeatherFragment"
     tools:visibility="visible">
 
 
@@ -56,7 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        app:constraint_referenced_ids="hourlyRecycleView,textView_temperature,textView_state,scrollView,horizontalLine" />
+        app:constraint_referenced_ids="textView_temperature,textView_state,scrollView,horizontalLine" />
 
     <TextView
         android:id="@+id/textView_temperature"
@@ -72,17 +72,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/hourlyRecycleView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_state" />
 
+<!--    recycler app:layout_constraintTop_toBottomOf="@+id/textView_state"-->
 
 
     <TextView
@@ -99,24 +90,33 @@
 
     <View
         android:id="@+id/horizontalLine"
-        app:layout_constraintTop_toBottomOf="@+id/hourlyRecycleView"
+        app:layout_constraintTop_toBottomOf="@+id/textView_state"
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height=".5dp"
         android:background="@color/gray"/>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hourlyRecycleView">
+        app:layout_constraintTop_toBottomOf="@+id/textView_state">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/hourlyRecycleView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/dailyRecyclerView"
@@ -128,16 +128,16 @@
 
             <View
                 android:id="@+id/horizontalLine1"
-                android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height=".5dp"
-                android:background="@color/gray"/>
+                android:layout_marginTop="16dp"
+                android:background="@color/gray" />
 
 
             <LinearLayout
-                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -239,7 +239,7 @@
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:id="@+id/constraint"
     android:layout_height="match_parent"
-    tools:context=".screens.alert.AlertFragment">
+    tools:context=".presentationLayer.screens.alert.AlertFragment">
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

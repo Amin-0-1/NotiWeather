@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
-    tools:context=".screens.favourite.bottomSheet.BottomSheetFavourite"
+    tools:context=".presentationLayer.screens.favourite.bottomSheet.BottomSheetFavourite"
     tools:visibility="visible">
 
     <androidx.core.widget.NestedScrollView

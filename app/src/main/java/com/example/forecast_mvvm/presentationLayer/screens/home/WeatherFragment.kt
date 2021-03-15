@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.screens.home
+package com.example.forecast_mvvm.presentationLayer.screens.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.dataLayer.entities.models.WeatherState
-import com.example.forecast_mvvm.dataLayer.local.LocalDataSource
 import com.example.forecast_mvvm.databinding.WeatherFragmentBinding
 import com.google.android.gms.location.*
 import java.text.SimpleDateFormat
@@ -61,6 +60,10 @@ class WeatherFragment : Fragment() {
 
         binding.hourlyRecycleView.layoutManager = horizontalLayout
         binding.dailyRecyclerView.layoutManager = verticalLayout
+
+
+        binding.dailyRecyclerView.isNestedScrollingEnabled = false
+
 
         hourlyAdapter = HourlyAdapter(mutableListOf(), viewModel,requireContext())
         dailyAdapter = DailyAdapter(mutableListOf(), viewModel, requireContext())

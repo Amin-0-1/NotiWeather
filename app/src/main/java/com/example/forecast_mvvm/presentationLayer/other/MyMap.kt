@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm
+package com.example.forecast_mvvm.presentationLayer.other
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,7 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.forecast_mvvm.screens.favourite.FavouriteViewModel
+import com.example.forecast_mvvm.R
+import com.example.forecast_mvvm.presentationLayer.screens.favourite.FavouriteViewModel
 import com.example.forecast_mvvm.utilities.SettingsSP
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap

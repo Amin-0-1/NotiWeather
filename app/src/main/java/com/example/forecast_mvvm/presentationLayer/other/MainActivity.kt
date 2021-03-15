@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.screens
+package com.example.forecast_mvvm.presentationLayer.other
 
 import android.content.Context
 import android.os.Bundle

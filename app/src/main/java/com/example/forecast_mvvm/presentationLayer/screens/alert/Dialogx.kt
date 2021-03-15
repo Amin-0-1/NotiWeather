@@ -1,4 +1,4 @@
-package com.example.forecast_mvvm.screens.alert
+package com.example.forecast_mvvm.presentationLayer.screens.alert
 
 import android.app.DatePickerDialog.OnDateSetListener
 import android.app.TimePickerDialog.OnTimeSetListener

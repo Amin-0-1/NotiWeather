@@ -2,6 +2,7 @@ package com.example.forecast_mvvm.dataLayer
 import android.app.Application
 import android.location.Geocoder
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import com.example.forecast_mvvm.dataLayer.remote.response.WeatherResponse
 import com.example.forecast_mvvm.dataLayer.local.LocalDataSource
@@ -9,6 +10,7 @@ import com.example.forecast_mvvm.dataLayer.local.response.Alarm
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteCoordination
 import com.example.forecast_mvvm.dataLayer.local.response.FavouriteWeatherResponse
 import com.example.forecast_mvvm.dataLayer.remote.RemoteDataSource
+import com.example.forecast_mvvm.utilities.SettingsSP
 import kotlinx.coroutines.runBlocking
 import java.io.IOException
 import java.util.*
@@ -45,10 +47,13 @@ class Repository(private val application: Application) {
 
     suspend fun getWeatherData(lat: String="", lon: String=""): WeatherResponse {
 
+        SettingsSP.loadSettings(application.applicationContext)
         // get current
         if(lat != "" && lon != ""){
             val data = remoteDataSource.getCurrentWeatherData(lat,lon) // api call
             Log.i("TAG", "getWeatherData: inside api")
+//            Toast.makeText(application.applicationContext,"inside function", Toast.LENGTH_LONG).show()
+
             if(data.isSuccessful){
 //                data.body()?.lat = lat.toDouble()
 //                data.body()?.lon = lon.toDouble()
@@ -113,6 +118,7 @@ class Repository(private val application: Application) {
     fun getWeatherAlertStatus(lat: Double, lng: Double, type: String): Boolean {
         var key = false
 
+//        Toast.makeText(application.applicationContext,"inside function",Toast.LENGTH_LONG).show()
         Log.i("TAG", "getWeatherAlertStatus: inside")
 //        runBlocking {
             var local = localDataSource.getWeatherData()

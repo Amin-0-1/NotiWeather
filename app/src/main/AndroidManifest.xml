@@ -22,7 +22,7 @@
         android:theme="@style/Theme.Forecast_MVVM"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".SplashScreen">
+        <activity android:name=".presentationLayer.other.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,11 +31,11 @@
         </activity>
 
         <activity
-            android:name=".MyMap"
+            android:name=".presentationLayer.other.MyMap"
             android:hardwareAccelerated="false"
             android:label="@string/title_activity_my_map" />
 
-        <activity android:name=".screens.MainActivity">
+        <activity android:name="com.example.forecast_mvvm.presentationLayer.other.MainActivity">
         </activity>
 
         <uses-library

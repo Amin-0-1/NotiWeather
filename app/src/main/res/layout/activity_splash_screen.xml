@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     style="@style/Theme.Design.NoActionBar"
-    tools:context=".SplashScreen">
+    tools:context=".presentationLayer.other.SplashScreen">
 
     <pl.droidsonroids.gif.GifImageView
         android:layout_width="match_parent"
