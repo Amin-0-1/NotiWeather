@@ -46,4 +46,7 @@
     <string name="rain">rain</string>
     <string name="fog">fog</string>
     <string name="snow">snow</string>
+    <string name="clear">clear</string>
+    <string name="mist">mist</string>
+    <string name="thunderstorm">thunderstorm</string>
 </resources>

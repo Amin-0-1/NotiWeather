@@ -18,6 +18,7 @@
             android:id="@+id/favourite_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
             android:background="@android:color/transparent"
             tools:listitem="@layout/favourite_item" />
 
@@ -31,7 +32,7 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:contentDescription="@string/imgDesc"
-        android:src="@drawable/ic_add_24"
+        app:srcCompat="@drawable/ic_add_24"
         app:hoveredFocusedTranslationZ="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

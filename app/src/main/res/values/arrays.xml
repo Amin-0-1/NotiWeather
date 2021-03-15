@@ -38,11 +38,13 @@
 
 
     <string-array name="alert_repeating">
-        <item>@string/rain</item>
+        <item>@string/clear</item>
         <item>@string/cloudss</item>
         <item>@string/fog</item>
+        <item>@string/mist</item>
+        <item>@string/rain</item>
         <item>@string/snow</item>
-<!--        <item>@string/Thunderstorm</item>-->
+        <item>@string/thunderstorm</item>
     </string-array>
 
 </resources>

@@ -45,6 +45,9 @@
 
     <string name="cloudss">سحب</string>
     <string name="rain">مطر</string>
-    <string name="fog">ضباب</string>
+    <string name="fog">غيوم</string>
     <string name="snow">ثلوج</string>
+    <string name="clear">صافية</string>
+    <string name="mist">ضباب</string>
+    <string name="thunderstorm">عاصفة برقية</string>
 </resources>

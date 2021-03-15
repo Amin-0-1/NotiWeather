@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="16dp">
 
 
     <ImageView
         android:id="@+id/calender_btn"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/imgDesc"
-        app:srcCompat="@drawable/ic_datepicker"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_datepicker" />
 
     <TextView
         android:id="@+id/dateTextView"
@@ -36,9 +36,9 @@
         android:layout_marginStart="164dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/imgDesc"
-        app:srcCompat="@drawable/ic_timepicker"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_timepicker" />
 
     <TextView
         android:id="@+id/timeTextView"
