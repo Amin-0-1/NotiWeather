@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
@@ -25,65 +24,55 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.forecast_mvvm.dataLayer.Repository
 import com.example.forecast_mvvm.dataLayer.remote.response.WeatherResponse
-import com.example.forecast_mvvm.utilities.IExactDate
-import com.example.forecast_mvvm.utilities.IExactDay
-import com.example.forecast_mvvm.utilities.IExactTime
-import com.example.forecast_mvvm.utilities.SettingsSP
+import com.example.forecast_mvvm.presentationLayer.other.MainActivity
+import com.example.forecast_mvvm.utilities.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.*
-import java.util.*
 
 
 @Suppress("DEPRECATION", "SENSELESS_COMPARISON")
 
-class WeatherViewModel(application: Application) : AndroidViewModel(application),IExactDay ,IExactTime, IExactDate{
+class WeatherViewModel(application: Application) : AndroidViewModel(application),IExactDay ,IExactTime, IExactDate,INetwork{
 
-    private var repository:Repository = Repository(application)
     @SuppressLint("StaticFieldLeak")
     private val context = application.applicationContext
+    private var repository:Repository = Repository(application)
+
+    /**
+     * start live data
+     */
     private val loadingLiveData = MutableLiveData<Boolean>()
-    private var geocoder:Geocoder = Geocoder(application.applicationContext, Locale.getDefault())
+    val getLoading:LiveData<Boolean>get() = loadingLiveData
 
+    private val requestPermissionLiveData = MutableLiveData<Boolean>();
+    val getRequestPermissionLiveData:LiveData<Boolean>get() = requestPermissionLiveData
 
-//    val getloading:LiveData<Boolean>get() = loadingLiveData // wesam
+    private var internetStatLiveData = MutableLiveData<Boolean>()
+    val getInternetState:LiveData<Boolean>get() = internetStatLiveData
 
-    private var errorLiveData = MutableLiveData<Boolean>()
-
-//    private var currentWeatherLiveData = MutableLiveData<WeatherResponse>()
     private var currentWeatherLiveData = MutableLiveData<WeatherResponse>()
+    val getCurrentWeatherLiveData:LiveData<WeatherResponse>get() = currentWeatherLiveData
 
+    /**
+     * end live data
+     */
+
+//    private var geocoder:Geocoder = Geocoder(application.applicationContext, Locale.getDefault())
     private val mPreferences = context.getSharedPreferences("location", MODE_PRIVATE);
 
 
-    fun getWeather(
-            requireActivity: FragmentActivity,
-            fusedLocationClient: FusedLocationProviderClient
-    ) {
-        SettingsSP.loadSettings(context)
+    fun getWeather(fusedLocationClient: FusedLocationProviderClient){
+//        SettingsSP.loadSettings(context)
 
         getLocalWeatherDate()
-        checkLocationPermission(requireActivity, fusedLocationClient)
+        getRemoteWeatherData(fusedLocationClient)
     }
-
-    fun getLoading(): LiveData<Boolean> {
-        return loadingLiveData
-    }
-    fun getErrorState(): LiveData<Boolean> {
-        return errorLiveData
-    }
-    fun getCurrentWeatherLiveData(): LiveData<WeatherResponse> {
-        return currentWeatherLiveData
-    }
-
 
     //Location methods
-    private fun checkLocationPermission(
-            activity: Activity,
-            fusedLocationProviderClient: FusedLocationProviderClient
-    ) {
+    private fun getRemoteWeatherData(fusedLocationProviderClient: FusedLocationProviderClient) {
         if (checkPermission()) {
             if (isLocationEnabled()) {
                 if(isNetworkAvailable(context)){
@@ -100,18 +89,17 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                         requestNewLocationData(fusedLocationProviderClient)
                     }
                 } else{
-                    Log.i("TAG", "else: ")
+                    Log.i("TAG", "needed internet ")
 //                    fetchRepoData()
                 }
 
             } else {
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 ContextCompat.startActivity(context, intent, null)
-                checkLocationPermission(activity,fusedLocationProviderClient)
             }
         } else {
-            requestPermissions(activity)
-            checkLocationPermission(activity,fusedLocationProviderClient)
+            Log.i("TAG", "getRemoteWeatherData: else of permission")
+            requestPermissionLiveData.value = true;
         }
 
     }
@@ -127,28 +115,27 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         return SettingsSP.getUnitSetting().equals("Imperial")
     }
 
+//    fun isNetworkAvailable(context: Context): Boolean {
+//        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+//        return activeNetwork?.isConnectedOrConnecting == true
+//    }
 
-    fun isNetworkAvailable(context: Context): Boolean {
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
-        return activeNetwork?.isConnectedOrConnecting == true
-    }
-
-    private fun checkPermission(): Boolean { // check permissions in run time
+    fun checkPermission(): Boolean { // check permissions in run time
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun requestPermissions(activity: Activity) {
-        ActivityCompat.requestPermissions(
-                activity, arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-        ), 1
-        )
-    }
+//    private fun requestPermissions(activity: Activity) {
+//        ActivityCompat.requestPermissions(
+//                activity, arrayOf(
+//                Manifest.permission.ACCESS_COARSE_LOCATION,
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//        ), 1
+//        )
+//    }
     private fun isLocationEnabled(): Boolean {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
@@ -196,10 +183,11 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
         viewModelScope.launch {
             val res = repository.getLocalWeather()
-            if(res != null)
+            if(res != null){
                 currentWeatherLiveData.postValue(res)
+            }
             else if(!isNetworkAvailable(context)){
-                errorLiveData.postValue(true)
+                internetStatLiveData.postValue(true)
             }
         }
 //        repository.getLocalWeather().observeForever {

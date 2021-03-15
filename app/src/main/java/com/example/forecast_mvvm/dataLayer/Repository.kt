@@ -21,10 +21,10 @@ class Repository(private val application: Application) {
     private val localDataSource:LocalDataSource = LocalDataSource(application)
 
 
-    fun getCityName(lat: Double, lon: Double): String {
+    fun getCityName(lat: Double, lon: Double): String? {
         val geocoder = Geocoder(application.applicationContext, Locale.getDefault())
         Log.i("dddd", "getCityName: inside getcityname")
-        var res = "null"
+        var res:String? = null
         if (lat != 0.0 && lon != 0.0) {
 
             try {

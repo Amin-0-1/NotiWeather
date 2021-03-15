@@ -1,6 +1,8 @@
 package com.example.forecast_mvvm.presentationLayer.screens.home
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.dataLayer.entities.models.WeatherState
 import com.example.forecast_mvvm.databinding.WeatherFragmentBinding
+import com.example.forecast_mvvm.presentationLayer.other.MainActivity
 import com.google.android.gms.location.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,11 +47,12 @@ class WeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
 
+        if(!viewModel.checkPermission())
+            requestLocationPermission()
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-//        viewModel.locationPermission(requireActivity(),fusedLocationClient)
         prepareLogic()
 
 
@@ -77,14 +82,14 @@ class WeatherFragment : Fragment() {
     private fun prepareLogic() {
         observeViewModel()
 
-        viewModel.getWeather(requireActivity(), fusedLocationClient)
+        viewModel.getWeather(fusedLocationClient)
     }
 
 
     @SuppressLint("SimpleDateFormat")
     private fun observeViewModel() {
 
-        viewModel.getCurrentWeatherLiveData().observe(viewLifecycleOwner, Observer {
+        viewModel.getCurrentWeatherLiveData.observe(viewLifecycleOwner, Observer {
 
             Log.i("TAG", "observeViewModel: fragment")
 
@@ -97,7 +102,7 @@ class WeatherFragment : Fragment() {
 
             updateBlockingUi()
             //updateLocation(it.lat, it.lon)
-            updateLocation(it.locality)
+            updateLocation(it.timezone,it.locality)
             updateCurrentDate(it.weatherState.dt)
             updateTemperature(it.weatherState)
             updateWeatherDetails(it.weatherState)
@@ -105,15 +110,28 @@ class WeatherFragment : Fragment() {
 
         })
 
-        viewModel.getErrorState().observe(viewLifecycleOwner, Observer {
+        viewModel.getRequestPermissionLiveData.observe(viewLifecycleOwner, {
+            requestLocationPermission()
+        })
+
+        viewModel.getInternetState.observe(viewLifecycleOwner,  {
             Toast.makeText(context, "no Internet Connection !!", Toast.LENGTH_SHORT).show()
-            updateBlockingUi()
+//            updateBlockingUi()
 
         })
 
-        viewModel.getLoading().observe(viewLifecycleOwner, Observer {
+        viewModel.getLoading.observe(viewLifecycleOwner,  {
 
         })
+    }
+
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(), arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ), 1
+        )
     }
 
     private fun updateBlockingUi() {
@@ -145,14 +163,14 @@ class WeatherFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle = viewModel.getCurrentDate(dt)
     }
 
-    private fun updateLocation(locality: String?) {
+    private fun updateLocation(timeZone:String,locality: String?) {
 //        val value = viewModel.getCityName(lat, lon)
 
         Log.i("TAG", "updateLocation lllllllllllllllllllllllll: $locality")
-        if(locality != "null"){
+        if(locality != null){
             (activity as? AppCompatActivity)?.supportActionBar?.title = locality
         }else{
-            (activity as? AppCompatActivity)?.supportActionBar?.title = resources.getString(R.string.loading)
+            (activity as? AppCompatActivity)?.supportActionBar?.title = timeZone
 
         }
 //        val string:String = timezone.substring(timezone.indexOf("/", 0, true) + 1)

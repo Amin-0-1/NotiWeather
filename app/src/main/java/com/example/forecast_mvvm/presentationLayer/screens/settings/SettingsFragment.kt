@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -13,9 +14,10 @@ import com.example.forecast_mvvm.presentationLayer.other.MyMap
 import com.example.forecast_mvvm.R
 import com.example.forecast_mvvm.presentationLayer.other.MainActivity
 import com.example.forecast_mvvm.utilities.ILanguage
+import com.example.forecast_mvvm.utilities.INetwork
 import com.example.forecast_mvvm.utilities.SettingsSP
 
-class SettingsFragment : PreferenceFragmentCompat() ,ILanguage{
+class SettingsFragment : PreferenceFragmentCompat() ,ILanguage,INetwork{
 
     private lateinit var mPreferences:SharedPreferences
 
@@ -33,9 +35,14 @@ class SettingsFragment : PreferenceFragmentCompat() ,ILanguage{
             Log.i("TAG", "onActivityCreated: gps")
             if(newValue.toString() != "GPS"){ // set location
 
-                val intent = Intent(requireContext(), MyMap::class.java)
-                intent.putExtra("state", "set")
-                startActivity(intent)
+                if(isNetworkAvailable(requireContext())){
+                    val intent = Intent(requireContext(), MyMap::class.java)
+                    intent.putExtra("state", "set")
+                    startActivity(intent)
+                }else{
+                    Toast.makeText(requireContext(),"No Internet Connection",Toast.LENGTH_SHORT).show()
+                }
+
                 false
 
 
