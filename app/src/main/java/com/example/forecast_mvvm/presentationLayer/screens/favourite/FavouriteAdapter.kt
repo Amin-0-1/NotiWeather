@@ -41,7 +41,13 @@ class FavouriteAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.fav_name.text = favouriteList[position].title
+
+        if(favouriteList[position].title != null){
+            holder.fav_name.text = favouriteList[position].title
+        }else{
+            holder.fav_name.text = "loading..."
+        }
+
 
         setOnClickFunctions(holder, position)
 
@@ -54,6 +60,8 @@ class FavouriteAdapter(
             val bundle = Bundle()
             bundle.putDouble("lat", favouriteList[position].lat)
             bundle.putDouble("lon", favouriteList[position].lon)
+            bundle.putString("placeTitle",favouriteList[position].title)
+
             bottomSheetDialogFragment.arguments = bundle
             bottomSheetDialogFragment.show(
                 (context as FragmentActivity).supportFragmentManager,

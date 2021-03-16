@@ -63,6 +63,7 @@ class BottomSheetFavourite: BottomSheetDialogFragment() {
 
         val lat = arguments?.getDouble("lat")!!
         val lon = arguments?.getDouble("lon")!!
+        val placeTitle = arguments?.getString("placeTitle")
 
         Log.i("track", "onViewCreated: ${lat} lon: $lon")
 
@@ -96,6 +97,7 @@ class BottomSheetFavourite: BottomSheetDialogFragment() {
                 binding.pressureTextView.text = it.weatherState.pressure.toString()
                 binding.windTextView.text = it.weatherState.windSpeed.toString()
                 binding.textViewState.text = it.weatherState.weather[0].description
+                binding.placeTitle.text = placeTitle
             })
 
     }

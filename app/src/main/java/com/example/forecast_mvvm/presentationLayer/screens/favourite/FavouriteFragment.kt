@@ -56,16 +56,17 @@ class FavouriteFragment : Fragment() {
             // save cooord in db
         }
 
-        binding.swipe.setOnRefreshListener {
-            viewModel.favouriteLocations()
-            binding.swipe.isRefreshing=false
-        }
+//        binding.swipe.setOnRefreshListener {
+//            viewModel.favouriteLocations()
+//            binding.swipe.isRefreshing=false
+//        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle= null
+
 
     }
 
