@@ -20,6 +20,7 @@ import com.example.forecast_mvvm.dataLayer.entities.models.WeatherState
 import com.example.forecast_mvvm.databinding.WeatherFragmentBinding
 import com.example.forecast_mvvm.presentationLayer.other.MainActivity
 import com.google.android.gms.location.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -54,6 +55,7 @@ class WeatherFragment : Fragment() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
         prepareLogic()
+        enableNavigationButtons()
 
 
         // preparing the recycler views for the fragment
@@ -114,8 +116,10 @@ class WeatherFragment : Fragment() {
             requestLocationPermission()
         })
 
+        // no local data and no internet
         viewModel.getInternetState.observe(viewLifecycleOwner,  {
             Toast.makeText(context, "no Internet Connection !!", Toast.LENGTH_SHORT).show()
+            disableNavigationButtons()
 //            updateBlockingUi()
 
         })
@@ -123,6 +127,25 @@ class WeatherFragment : Fragment() {
         viewModel.getLoading.observe(viewLifecycleOwner,  {
 
         })
+    }
+
+    @SuppressLint("CutPasteId", "SetTextI18n")
+    private fun disableNavigationButtons() {
+        (activity as? AppCompatActivity)?.findViewById<BottomNavigationView>(R.id.bottom_nav)?.menu?.findItem(R.id.favouriteFragment)?.isEnabled = false
+        (activity as? AppCompatActivity)?.findViewById<BottomNavigationView>(R.id.bottom_nav)?.menu?.findItem(R.id.alertFragment)?.isEnabled = false
+        (activity as? AppCompatActivity)?.findViewById<BottomNavigationView>(R.id.bottom_nav)?.menu?.findItem(R.id.settingsFragment)?.isEnabled = false
+
+        binding.progressBarLoading.visibility = View.GONE
+        binding.textViewLoading.text = "Internet Connection Needed"
+        binding.textViewLoading.visibility = View.VISIBLE
+
+    }
+
+    @SuppressLint("CutPasteId")
+    private fun enableNavigationButtons(){
+        (activity as? AppCompatActivity)?.findViewById<BottomNavigationView>(R.id.bottom_nav)?.menu?.findItem(R.id.favouriteFragment)?.isEnabled = true
+        (activity as? AppCompatActivity)?.findViewById<BottomNavigationView>(R.id.bottom_nav)?.menu?.findItem(R.id.alertFragment)?.isEnabled = true
+        (activity as? AppCompatActivity)?.findViewById<BottomNavigationView>(R.id.bottom_nav)?.menu?.findItem(R.id.settingsFragment)?.isEnabled = true
     }
 
     private fun requestLocationPermission() {
